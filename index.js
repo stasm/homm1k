@@ -15,9 +15,8 @@ offset_y = 4,
 target = -1,
 through = 0,
 timeout = 0,
-distances = [],
-world = (x, y) => 30 * (y + offset_y) + x + offset_x,
-view = i => [(i % 30) - offset_x, (i / 30 >> 0) - offset_y],
+world = [],
+view = i => [i % 30 - offset_x, 0|i / 30 - offset_y],
 minimap = (x, y) => [500 + x * 4, 20 + y * 4],
 
 draw = (x, y, pattern, i) => {
@@ -25,7 +24,7 @@ draw = (x, y, pattern, i) => {
         if (c.fillStyle = palette[
                 // Single-digit patters are solid 4x4 sprites of the same color.
                 pattern < 9 ? pattern : ("" + pattern).padStart(16, 0)[i]]) {
-            c.fillRect(x + (i % 4), y + (i / 4 >> 0), 1, 1);
+            c.fillRect(x + (i % 4), 0|y + i / 4, 1, 1);
         }
     }
 },
@@ -46,14 +45,14 @@ neighbors = i => [
     i - 31, i + 29, i + 31, i - 29],
 
 distance = i => neighbors(i).map(n =>
-    distances[i] + 1 < distances[n] &&
-        (distances[n] = distances[i] + 1, distance(n))),
+    world[i] + 1 < world[n] &&
+        (world[n] = world[i] + 1, distance(n))),
 
 move = i => {
     // x, y are in view coords
     clearTimeout(timeout);
     render();
-    if (distances[i] > 0 && distances[i] < Infinity) {
+    if (world[i] > 0 && world[i] < Infinity) {
         if (i === target) {
             player_pos = through;
             timeout = setTimeout(() => move(i));
@@ -70,18 +69,18 @@ path = i => (
  ),
 
 scroll = (x, y) => {
-    offset_x = x / 4 >> 0;
-    offset_y = y / 4 >> 0;
+    offset_x = 0|x / 4;
+    offset_y = 0|y / 4;
     render();
     // Draw the path to the current target, but only if the player hasn't
     // reached it yet.
-    distances[target] && path(target);
+    world[target] && path(target);
 },
 
 trace = i => (through = i, neighbors(i).some(n =>
          // (c.font = "8px sans-serif", c.fillStyle = "#fff",
          // c.fillText(distances[n], ...view(n).map(x => x * 32 + 4)),
-         distances[n] === 0 || distances[n] < distances[i] &&
+         world[n] === 0 || world[n] < world[i] &&
              (draw_tilted(view(n), 30001e5 /* dot */), trace(n)))),
 
 render = i => {
@@ -94,7 +93,7 @@ render = i => {
     // Map
     for (i = 30**2; i--;) {
         let x = i % 30;
-        let y = i / 30 >> 0;
+        let y = 0|i / 30;
         let v = 5 * Math.sin((x - 9) * (y - 22) / 80) + Math.sin(i * i) + 3;
 
         draw(...minimap(x, y),
@@ -105,14 +104,14 @@ render = i => {
             6 // water
         );
 
-        distances[i] = 0 < v && v <= 4 ? Infinity : "x";
+        world[i] = 0 < v && v <= 4 ? Infinity : "x";
     }
 
-    distances[player_pos] = 0;
+    world[player_pos] = 0;
     distance(player_pos);
 
     draw(
-        ...minimap(player_pos % 30, player_pos / 30 >> 0),
+        ...minimap(player_pos % 30, 0|player_pos / 30),
         2677037016107070 /* knight */);
 
     // Viewport
@@ -129,7 +128,7 @@ render();
 a.onclick = (e, x, y) => (
     x = e.x - e.target.offsetLeft,
     y = e.y - e.target.offsetTop,
-    // Handle viewport clicks
-    x < 480 && move(world(x / 32 >> 0, y / 32 >> 0)),
+    // Handle viewport clicks. Transform x, y into an index into the world array.
+    x < 480 && move(0|30 * (0|y / 32 + offset_y) + x / 32 + offset_x),
     // Handle minimap clicks
     (500 < x && x < 620 && 20 < y && y < 140) && scroll(x - 530, y - 50));
