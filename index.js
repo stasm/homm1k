@@ -21,9 +21,10 @@ view = i => [(i % 30) - offset_x, (i / 30 >> 0) - offset_y],
 minimap = (x, y) => [500 + x * 4, 20 + y * 4],
 
 draw = (x, y, pattern, i) => {
-    pattern = ("" + pattern).padStart(16, 0);
     for (i = 16; i--;) {
-        if (c.fillStyle = palette[pattern[i]]) {
+        if (c.fillStyle = palette[
+                // Single-digit patters are solid 4x4 sprites of the same color.
+                pattern < 9 ? pattern : ("" + pattern).padStart(16, 0)[i]]) {
             c.fillRect(x + (i % 4), y + (i / 4 >> 0), 1, 1);
         }
     }
@@ -81,7 +82,7 @@ trace = i => (through = i, neighbors(i).some(n =>
         //  (c.font = "8px sans-serif", c.fillStyle = "#fff",
         //  c.fillText(distances[n], ...view(n).map(x => x * 32 + 4)),
          distances[n] === 0 || distances[n] < distances[i] &&
-             (draw_tilted(view(n), 4000100000 /* dot */), trace(n)))),
+             (draw_tilted(view(n), 40001e5 /* dot */), trace(n)))),
 
 render = i => {
     // Sidebar
@@ -101,9 +102,9 @@ render = i => {
         draw(...minimap(x, y),
             v > 2.3 ? 5135111311111111 : // rock
             v > .7 ? 5545544554445515 : // tree
-            v > -1 ? 5555555555555555 : // grass
-            v > -1.7 ? 3333333333333333 : // beach
-            6666666666666666, // water
+            v > -1 ? 5 : // grass
+            v > -1.7 ? 3 : // beach
+            6, // water
         );
 
         // Palette here stands for a non-numerical value and represents
