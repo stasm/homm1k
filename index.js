@@ -65,7 +65,7 @@ move = i => {
 
 path = i => (
     trace(i),
-    draw_tilted(view(i), 40044401410010 /* x */),
+    draw_tilted(view(i), 30033301310010 /* x */),
     i
  ),
 
@@ -82,7 +82,7 @@ trace = i => (through = i, neighbors(i).some(n =>
          // (c.font = "8px sans-serif", c.fillStyle = "#fff",
          // c.fillText(distances[n], ...view(n).map(x => x * 32 + 4)),
          distances[n] === 0 || distances[n] < distances[i] &&
-             (draw_tilted(view(n), 40001e5 /* dot */), trace(n)))),
+             (draw_tilted(view(n), 30001e5 /* dot */), trace(n)))),
 
 render = i => {
     // Sidebar
@@ -101,7 +101,7 @@ render = i => {
             v > 6 ? 5135111311111111: // rock
             v > 4 ? 5545544554445515: // tree
             v > 1 ? 5: // grass
-            v > 0 ? 3: // beach
+            v > 0 ? 5555555555445444: // bush
             6 // water
         );
 
@@ -113,7 +113,7 @@ render = i => {
 
     draw(
         ...minimap(player_pos % 30, player_pos / 30 >> 0),
-        2677067012107070 /* knight */);
+        2677037016107070 /* knight */);
 
     // Viewport
     c.drawImage(a, ...minimap(offset_x, offset_y), 60, 60, 0, 0, 480, 480);
