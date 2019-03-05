@@ -55,15 +55,16 @@ move = i => {
             player_pos = through;
             timeout = setTimeout(() => move(i));
         }
-        target = i;
-        path(i);
+        // path() returns i
+        target = path(i);
     }
 },
 
-path = i => {
-    trace(i);
-    draw_tilted(view(i), 40044401410010 /* x */);
-},
+path = i => (
+    trace(i),
+    draw_tilted(view(i), 40044401410010 /* x */),
+    i
+ ),
 
 scroll = (x, y) => {
     offset_x = x / 4 >> 0;
