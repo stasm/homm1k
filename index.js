@@ -69,7 +69,6 @@ scroll = (x, y) => {
     offset_x = x / 4 >> 0;
     offset_y = y / 4 >> 0;
     render();
-    target && target !== player_pos && path(target);
 },
 
 trace = i => (through = i, neighbors(i).some(n =>
