@@ -16,7 +16,6 @@ target = -1,
 through = 0,
 timeout = 0,
 world = [],
-view = i => [i % 30 - offset_x, 0|i / 30 - offset_y],
 minimap = (x, y) => [500 + x * 4, 20 + y * 4],
 
 draw = (x, y, pattern, i) => {
@@ -29,7 +28,9 @@ draw = (x, y, pattern, i) => {
     }
 },
 
-draw_tilted = ([x, y], pattern) => {
+draw_tilted = (i, pattern, x, y) => {
+    x = i % 30 - offset_x;
+    y = 0|i / 30 - offset_y;
     //c.scale(8, 8);
     //c.rotate(Math.PI / 4);
     //c.translate(x * 4 + 2.5, y * 4 + 1.5);
@@ -64,7 +65,7 @@ move = i => {
 
 path = i => (
     trace(i),
-    draw_tilted(view(i), 30033301310010 /* x */),
+    draw_tilted(i, 30033301310010 /* x */),
     i
  ),
 
@@ -78,10 +79,8 @@ scroll = (x, y) => {
 },
 
 trace = i => (through = i, neighbors(i).some(n =>
-         // (c.font = "8px sans-serif", c.fillStyle = "#fff",
-         // c.fillText(distances[n], ...view(n).map(x => x * 32 + 4)),
          world[n] === 0 || world[n] < world[i] &&
-             (draw_tilted(view(n), 30001e5 /* dot */), trace(n)))),
+             (draw_tilted(n, 30001e5 /* dot */), trace(n)))),
 
 render = i => {
     // Sidebar
