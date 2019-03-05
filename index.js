@@ -21,9 +21,8 @@ view = i => [(i % 30) - offset_x, (i / 30 >> 0) - offset_y],
 minimap = (x, y) => [500 + x * 4, 20 + y * 4],
 
 draw = (x, y, pattern) => {
-    let decoded = parseInt(pattern, 36).toString(2).padStart(48, 0);
     for (let i = 0; i < 16; i++) {
-        let index = parseInt(decoded.substr(i * 3, 3), 2);
+        let index = parseInt(pattern.substr(i * 3, 3), 2);
         if (index) {
             c.fillStyle = palette[index];
             c.fillRect(x + (i % 4), y + (i / 4 >> 0), 1, 1);
@@ -65,7 +64,7 @@ move = (x, y) => {
 
 path = i => {
     trace(i);
-    draw_tilted(view(i), "s4gum1oo" /* x */);
+    draw_tilted(view(i), "000000100000000100100100000001100001000000001000" /* x */);
 },
 
 scroll = (x, y) => {
@@ -79,7 +78,7 @@ trace = i => (through = i, neighbors(i).some(n =>
         //  (c.font = "8px sans-serif", c.fillStyle = "#fff",
         //  c.fillText(distances[n], ...view(n).map(x => x * 32 + 4)),
          distances[n] === 0 || distances[n] < distances[i] &&
-             (draw_tilted(view(n), "8vnpj4" /* dot */), trace(n)))),
+             (draw_tilted(view(n), "000000000000000000100000000000001000000000000000" /* dot */), trace(n)))),
 
 render = () => {
     // Sidebar
@@ -98,11 +97,11 @@ render = () => {
             + (Math.cos((x + 3) / 5) + Math.cos(y / 6));
 
         draw(...minimap(x, y),
-            v > 2.3 ? "1smluty4w9" : // rock
-            v > .7 ? "1z2lm9owgd" : // tree
-            v > -1 ? "1z9mq7h3l9" : // grass
-            v > -1.7 ? "16rdmxa9cr" : // beach
-            "2dir9ukipi", // water
+            v > 2.3 ? "101001011101001001001011001001001001001001001001" : // rock
+            v > .7 ? "101101100101101100100101101100100100101101001101" : // tree
+            v > -1 ? "101101101101101101101101101101101101101101101101" : // grass
+            v > -1.7 ? "011011011011011011011011011011011011011011011011" : // beach
+            "110110110110110110110110110110110110110110110110", // water
         );
 
         distances[c] = -1.7 < v && v < .7 ? Infinity : "X";
@@ -113,7 +112,7 @@ render = () => {
 
     draw(
         ...minimap(player_pos % 30, player_pos / 30 >> 0),
-        "zu1tjlq2g" /* knight */);
+        "010110111111000110111000001010001000111000111000" /* knight */);
 
     // Viewport
     c.drawImage(a, ...minimap(offset_x, offset_y), 60, 60, 0, 0, 480, 480);
