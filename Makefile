@@ -11,7 +11,7 @@ regpacked.js: minified.js
 		--crushGainFactor 1 \
 		--crushLengthFactor 0 \
 		--crushCopiesFactor 0 \
-		--withMath 1 \
+		--withMath 0 \
 		--contextVariableName c \
 		--hash2DContext 1 \
 		> $@
