@@ -9,9 +9,9 @@ var palette = [
     "#036", // 6 blue
     "#fff", // 7 white
 ],
-player_pos = 248,
-offset_x = 2,
-offset_y = 2,
+player_pos = 400,
+offset_x = 4,
+offset_y = 4,
 target = -1,
 through = 0,
 timeout = 0,
@@ -79,8 +79,8 @@ scroll = (x, y) => {
 },
 
 trace = i => (through = i, neighbors(i).some(n =>
-        //  (c.font = "8px sans-serif", c.fillStyle = "#fff",
-        //  c.fillText(distances[n], ...view(n).map(x => x * 32 + 4)),
+         // (c.font = "8px sans-serif", c.fillStyle = "#fff",
+         // c.fillText(distances[n], ...view(n).map(x => x * 32 + 4)),
          distances[n] === 0 || distances[n] < distances[i] &&
              (draw_tilted(view(n), 40001e5 /* dot */), trace(n)))),
 
@@ -95,21 +95,24 @@ render = i => {
     for (i = 30**2; i--;) {
         let x = i % 30;
         let y = i / 30 >> 0;
-        let v =
-            (Math.sin((x + 5) / 3) + Math.sin(y / 4))
-            + (Math.cos((x + 3) / 5) + Math.cos(y / 6));
+        let v = 5 * Math.sin((x-9)*(y-22)/80) + Math.sin(i*i) + 6 >> 0;
 
-        draw(...minimap(x, y),
-            v > 2.3 ? 5135111311111111 : // rock
-            v > .7 ? 5545544554445515 : // tree
-            v > -1 ? 5 : // grass
-            v > -1.7 ? 3 : // beach
+        draw(...minimap(x, y), [
             6, // water
-        );
+            6, // water
+            6, // water
+            3, // beach
+            5, // grass
+            5, // grass
+            5, // grass
+            5545544554445515, // tree
+            5545544554445515, // tree
+            5135111311111111, // rock
+            5135111311111111, // rock
+            5135111311111111, // rock
+        ][v]);
 
-        // Palette here stands for a non-numerical value and represents
-        // non-passable terrain.
-        distances[i] = -1.7 < v && v < .7 ? Infinity : palette;
+        distances[i] = 2 < v && v < 7 ? Infinity : "x";
     }
 
     distances[player_pos] = 0;
