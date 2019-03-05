@@ -10,13 +10,12 @@ var palette = [
     "#fff", // 7 white
 ],
 player_pos = 400,
-offset_x = 4,
-offset_y = 4,
+offset_x = 516,
+offset_y = 32,
 target = -1,
 through = 0,
 timeout = 0,
 world = [],
-minimap = (x, y) => [500 + x * 4, 20 + y * 4],
 
 draw = (x, y, pattern, i) => {
     for (i = 16; i--;) {
@@ -28,12 +27,12 @@ draw = (x, y, pattern, i) => {
     }
 },
 
-draw_tilted = (i, pattern, x, y) => {
-    x = i % 30 - offset_x;
-    y = 0|i / 30 - offset_y;
+indicator = (i, pattern, x, y) => {
+    x = i % 30 * 4 - offset_x + 500;
+    y = (0|i / 30) * 4 - offset_y + 20;
     // Approximate scale(8, 8) and rotate(Math.PI / 4).
     // c.setTransform(5.6, 5.6, -5.6, 5.6, x*32, y*32);
-    c.setTransform(6, 6, -6, 6, x * 32, y * 32);
+    c.setTransform(6, 6, -6, 6, x * 8, y * 8);
     draw(0, -2, pattern);
     c.setTransform(1, 0, 0, 1, 0, 0);
 },
@@ -49,7 +48,6 @@ distance = i => neighbors(i).map(n =>
         (world[n] = world[i] + 1, distance(n))),
 
 move = i => {
-    // x, y are in view coords
     clearTimeout(timeout);
     render();
     if (world[i] > 0 && world[i] < Infinity) {
@@ -64,13 +62,13 @@ move = i => {
 
 path = i => (
     trace(i),
-    draw_tilted(i, 30033301310010 /* x */),
+    indicator(i, 30033301310010 /* x */),
     i
  ),
 
 scroll = (x, y) => {
-    offset_x = 0|x / 4;
-    offset_y = 0|y / 4;
+    offset_x = x - 30;
+    offset_y = y - 30;
     render();
     // Draw the path to the current target, but only if the player hasn't
     // reached it yet.
@@ -79,7 +77,7 @@ scroll = (x, y) => {
 
 trace = i => (through = i, neighbors(i).some(n =>
          world[n] === 0 || world[n] < world[i] &&
-             (draw_tilted(n, 30001e5 /* dot */), trace(n)))),
+             (indicator(n, 30001e5 /* dot */), trace(n)))),
 
 render = i => {
     // Sidebar
@@ -87,6 +85,9 @@ render = i => {
     c.fillRect(480, 0, 160, 480);
     c.fillStyle = palette[1];
     c.fillRect(490, 10, 140, 140);
+    // c.fillRect(490, 160, 140, 310);
+    // c.fillStyle = palette[3];
+    // c.fillRect(500, 170, 120, 290);
 
     // Map
     for (i = 30**2; i--;) {
@@ -94,7 +95,7 @@ render = i => {
         let y = 0|i / 30;
         let v = 5 * Math.sin((x - 9) * (y - 22) / 80) + Math.sin(i * i) + 3;
 
-        draw(...minimap(x, y),
+        draw(4 * x + 500, 4 * y + 20,
             v > 6 ? 5135111311111111: // rock
             v > 4 ? 5545544554445515: // tree
             v > 1 ? 5: // grass
@@ -109,16 +110,16 @@ render = i => {
     distance(player_pos);
 
     draw(
-        ...minimap(player_pos % 30, 0|player_pos / 30),
+        player_pos % 30 * 4 + 500, (0|player_pos / 30) * 4 + 20,
         2677037016107070 /* knight */);
 
     // Viewport
-    c.drawImage(a, ...minimap(offset_x, offset_y), 60, 60, 0, 0, 480, 480);
+    c.drawImage(a, offset_x, offset_y, 60, 60, 0, 0, 480, 480);
 
     // Overflow border
     c.lineWidth = 2;
     c.strokeStyle = palette[7];
-    c.strokeRect(...minimap(offset_x, offset_y), 60, 60);
+    c.strokeRect(offset_x, offset_y, 60, 60);
 };
 
 render();
@@ -126,7 +127,10 @@ render();
 a.onclick = (e, x, y) => (
     x = e.x - e.target.offsetLeft,
     y = e.y - e.target.offsetTop,
-    // Handle viewport clicks. Transform x, y into an index into the world array.
-    x < 480 && move(0|30 * (0|y / 32 + offset_y) + x / 32 + offset_x),
+    // Handle viewport clicks
+    x < 480 && move(
+        // Transform x, y into an index into the world array
+        0|(x/8 + offset_x - 500) / 4
+        + 30 * (0|(y/8 + offset_y - 20) / 4)),
     // Handle minimap clicks
-    (500 < x && x < 620 && 20 < y && y < 140) && scroll(x - 530, y - 50));
+    (500 < x && x < 620 && 20 < y && y < 140) && scroll(x, y));
