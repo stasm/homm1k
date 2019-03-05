@@ -39,8 +39,10 @@ draw_tilted = ([x, y], pattern) => {
 },
 
 neighbors = i => [
+    // Cardinal directions: N W S E
     i - 30, i - 1, i + 30, i + 1,
-    i - 30 - 1, i + 30 - 1, i + 30 + 1, i - 30 + 1],
+    // Diagonal directions: NW SW SE NE
+    i - 31, i + 29, i + 31, i - 29],
 
 distance = i => neighbors(i).map(n =>
     distances[i] + 1 < distances[n] &&
