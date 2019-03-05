@@ -46,14 +46,14 @@ distance = i => neighbors(i).map(n =>
     distances[i] + 1 < distances[n] &&
         (distances[n] = distances[i] + 1, distance(n))),
 
-move = (x, y, i) => {
+move = i => {
     // x, y are in view coords
     clearTimeout(timeout);
     render();
-    if (distances[i = world(x, y)] > 0) {
+    if (distances[i] > 0) {
         if (i === target) {
             player_pos = through;
-            timeout = setTimeout(() => move(x, y), 33);
+            timeout = setTimeout(() => move(i), 33);
         }
         target = i;
         path(i);
@@ -69,6 +69,9 @@ scroll = (x, y) => {
     offset_x = x / 4 >> 0;
     offset_y = y / 4 >> 0;
     render();
+    // Draw the path to the current target, but only if the player hasn't
+    // reached it yet.
+    distances[target] && path(target);
 },
 
 trace = i => (through = i, neighbors(i).some(n =>
@@ -127,6 +130,6 @@ a.onclick = (e, x, y) => (
     x = e.x - e.target.offsetLeft,
     y = e.y - e.target.offsetTop,
     // Handle viewport clicks
-    x < 480 && move(x / 32 >> 0, y / 32 >> 00),
+    x < 480 && move(world(x / 32 >> 0, y / 32 >> 00)),
     // Handle minimap clicks
     (500 < x && x < 620 && 20 < y && y < 140) && scroll(x - 530, y - 50));
