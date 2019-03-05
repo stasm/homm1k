@@ -31,10 +31,9 @@ draw = (x, y, pattern, i) => {
 draw_tilted = (i, pattern, x, y) => {
     x = i % 30 - offset_x;
     y = 0|i / 30 - offset_y;
-    //c.scale(8, 8);
-    //c.rotate(Math.PI / 4);
-    //c.translate(x * 4 + 2.5, y * 4 + 1.5);
-    c.setTransform(5.6, 5.6, -5.6, 5.6, x*32+20, y*32+12);
+    // Approximate scale(8, 8) and rotate(Math.PI / 4).
+    // c.setTransform(5.6, 5.6, -5.6, 5.6, x*32+20, y*32+12);
+    c.setTransform(6, 6, -6, 6, x*32+20, y*32+9);
     draw(-2.5, -1.5, pattern);
     c.setTransform(1, 0, 0, 1, 0, 0);
 },
