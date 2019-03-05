@@ -8,10 +8,10 @@ minified.js: index.js
 
 regpacked.js: minified.js
 	@npx --quiet regpack $< \
-		--crushGainFactor 2 \
-		--crushLengthFactor 1 \
+		--crushGainFactor 1 \
+		--crushLengthFactor 0 \
 		--crushCopiesFactor 0 \
-		--withMath 0 \
+		--withMath 1 \
 		--contextVariableName c \
 		--hash2DContext 1 \
 		> $@
