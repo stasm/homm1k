@@ -20,9 +20,9 @@ world = (x, y) => 30 * (y + offset_y) + x + offset_x,
 view = i => [(i % 30) - offset_x, (i / 30 >> 0) - offset_y],
 minimap = (x, y) => [500 + x * 4, 20 + y * 4],
 
-draw = (x, y, pattern) => {
-    pattern = (""+pattern).padStart(16, 0);
-    for (let i = 16; i--;) {
+draw = (x, y, pattern, i) => {
+    pattern = ("" + pattern).padStart(16, 0);
+    for (i = 16; i--;) {
         if (c.fillStyle = palette[pattern[i]]) {
             c.fillRect(x + (i % 4), y + (i / 4 >> 0), 1, 1);
         }
@@ -46,12 +46,11 @@ distance = i => neighbors(i).map(n =>
     distances[i] + 1 < distances[n] &&
         (distances[n] = distances[i] + 1, distance(n))),
 
-move = (x, y) => {
+move = (x, y, i) => {
     // x, y are in view coords
     clearTimeout(timeout);
     render();
-    let i = world(x, y);
-    if (distances[i] > 0) {
+    if (distances[i = world(x, y)] > 0) {
         if (i === target) {
             player_pos = through;
             timeout = setTimeout(() => move(x, y), 33);
@@ -79,7 +78,7 @@ trace = i => (through = i, neighbors(i).some(n =>
          distances[n] === 0 || distances[n] < distances[i] &&
              (draw_tilted(view(n), 4000100000 /* dot */), trace(n)))),
 
-render = () => {
+render = i => {
     // Sidebar
     c.fillStyle = palette[2];
     c.fillRect(480, 0, 160, 480);
@@ -87,7 +86,7 @@ render = () => {
     c.fillRect(490, 10, 140, 140);
 
     // Map
-    for (let i = 30**2; i--;) {
+    for (i = 30**2; i--;) {
         let x = i % 30;
         let y = i / 30 >> 0;
         let v =
