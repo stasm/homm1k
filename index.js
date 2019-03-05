@@ -53,7 +53,7 @@ move = i => {
     if (distances[i] > 0) {
         if (i === target) {
             player_pos = through;
-            timeout = setTimeout(() => move(i), 33);
+            timeout = setTimeout(() => move(i));
         }
         target = i;
         path(i);
