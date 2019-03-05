@@ -10,9 +10,9 @@ var palette = [
     "#fff", // 7 white
 ],
 player_pos = 248,
-offset_x = 1,
-offset_y = 1,
-target = 0,
+offset_x = 2,
+offset_y = 2,
+target = -1,
 through = 0,
 timeout = 0,
 distances = [],
@@ -53,7 +53,7 @@ move = i => {
     // x, y are in view coords
     clearTimeout(timeout);
     render();
-    if (distances[i] > 0) {
+    if (distances[i] > 0 && distances[i] < Infinity) {
         if (i === target) {
             player_pos = through;
             timeout = setTimeout(() => move(i));
@@ -134,6 +134,6 @@ a.onclick = (e, x, y) => (
     x = e.x - e.target.offsetLeft,
     y = e.y - e.target.offsetTop,
     // Handle viewport clicks
-    x < 480 && move(world(x / 32 >> 0, y / 32 >> 00)),
+    x < 480 && move(world(x / 32 >> 0, y / 32 >> 0)),
     // Handle minimap clicks
     (500 < x && x < 620 && 20 < y && y < 140) && scroll(x - 530, y - 50));
