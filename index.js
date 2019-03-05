@@ -95,24 +95,17 @@ render = i => {
     for (i = 30**2; i--;) {
         let x = i % 30;
         let y = i / 30 >> 0;
-        let v = 5 * Math.sin((x-9)*(y-22)/80) + Math.sin(i*i) + 6 >> 0;
+        let v = 5 * Math.sin((x - 9) * (y - 22) / 80) + Math.sin(i * i);
 
-        draw(...minimap(x, y), [
-            6, // water
-            6, // water
-            6, // water
-            3, // beach
-            5, // grass
-            5, // grass
-            5, // grass
-            5545544554445515, // tree
-            5545544554445515, // tree
-            5135111311111111, // rock
-            5135111311111111, // rock
-            5135111311111111, // rock
-        ][v]);
+        draw(...minimap(x, y),
+            v > 3 ? 5135111311111111: // rock
+            v > 1 ? 5545544554445515: // tree
+            v > -2 ? 5: // grass
+            v > -3 ? 3: // beach
+            6 // water
+        );
 
-        distances[i] = 2 < v && v < 7 ? Infinity : "x";
+        distances[i] = -3 < v && v < 1 ? Infinity : "x";
     }
 
     distances[player_pos] = 0;
