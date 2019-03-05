@@ -22,7 +22,7 @@ minimap = (x, y) => [500 + x * 4, 20 + y * 4],
 
 draw = (x, y, pattern) => {
     pattern = (""+pattern).padStart(16, 0);
-    for (let i = 0; i < 16; i++) {
+    for (let i = 16; i--;) {
         if (c.fillStyle = palette[pattern[i]]) {
             c.fillRect(x + (i % 4), y + (i / 4 >> 0), 1, 1);
         }
@@ -87,9 +87,9 @@ render = () => {
     c.fillRect(490, 10, 140, 140);
 
     // Map
-    for (let c = 0; c < 30**2; c++) {
-        let x = c % 30;
-        let y = c / 30 >> 0;
+    for (let i = 30**2; i--;) {
+        let x = i % 30;
+        let y = i / 30 >> 0;
         let v =
             (Math.sin((x + 5) / 3) + Math.sin(y / 4))
             + (Math.cos((x + 3) / 5) + Math.cos(y / 6));
@@ -102,7 +102,7 @@ render = () => {
             6666666666666666, // water
         );
 
-        distances[c] = -1.7 < v && v < .7 ? Infinity : "X";
+        distances[i] = -1.7 < v && v < .7 ? Infinity : "X";
     }
 
     distances[player_pos] = 0;
