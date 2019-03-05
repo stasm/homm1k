@@ -101,7 +101,9 @@ render = i => {
             6666666666666666, // water
         );
 
-        distances[i] = -1.7 < v && v < .7 ? Infinity : "X";
+        // Palette here stands for a non-numerical value and represents
+        // non-passable terrain.
+        distances[i] = -1.7 < v && v < .7 ? Infinity : palette;
     }
 
     distances[player_pos] = 0;
