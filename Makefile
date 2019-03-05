@@ -1,10 +1,13 @@
-all: min.js
+all: regpacked.js
 
-min.js: index.js
+minified.js: index.js
 	@npx --quiet terser $< \
 		--mangle toplevel \
-		--compress toplevel,passes=3,unsafe,pure_getters \
-	| npx --quiet regpack - \
+		--compress booleans_as_integers,drop_console,ecma=6,passes=3,pure_getters,toplevel,unsafe,unsafe_math \
+		> $@
+
+regpacked.js: minified.js
+	@npx --quiet regpack $< \
 		--crushGainFactor 2 \
 		--crushLengthFactor 1 \
 		--crushCopiesFactor 0 \
@@ -12,3 +15,6 @@ min.js: index.js
 		--contextVariableName c \
 		--hash2DContext 1 \
 		> $@
+
+clean:
+	@rm minified.js regpacked.js
