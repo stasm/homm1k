@@ -23,7 +23,7 @@ draw = (x, y, pattern, i) => {
         if (c.fillStyle = palette[
                 // Single-digit patters are solid 4x4 sprites of the same color.
                 pattern < 9 ? pattern : ("" + pattern).padStart(16, 0)[i]]) {
-            c.fillRect(x + (i % 4), 0|y + i / 4, 1, 1);
+            c.fillRect(x + (i % 4), y + (0|i / 4), 1, 1);
         }
     }
 },
@@ -32,9 +32,9 @@ draw_tilted = (i, pattern, x, y) => {
     x = i % 30 - offset_x;
     y = 0|i / 30 - offset_y;
     // Approximate scale(8, 8) and rotate(Math.PI / 4).
-    // c.setTransform(5.6, 5.6, -5.6, 5.6, x*32+20, y*32+12);
-    c.setTransform(6, 6, -6, 6, x*32+20, y*32+9);
-    draw(-2.5, -1.5, pattern);
+    // c.setTransform(5.6, 5.6, -5.6, 5.6, x*32, y*32);
+    c.setTransform(6, 6, -6, 6, x * 32, y * 32);
+    draw(0, -2, pattern);
     c.setTransform(1, 0, 0, 1, 0, 0);
 },
 
