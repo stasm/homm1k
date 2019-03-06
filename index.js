@@ -62,7 +62,7 @@ move = i => {
             player_pos = through;
             if (through === dragon_pos) {
                 // Defeat the dragon
-                dragon_pos = c.fillRect(0, 0, 480, 480);
+                dragon_pos = c.fillRect(0, 0, 640, 480);
                 viewport(player_pos, 0x168164160020); // The checkmark
             } else {
                 // Schedule the next frame of the movement
