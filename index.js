@@ -10,10 +10,11 @@ var palette = [
     "#fff", // 7 white
 ],
 player_pos = 400,
+dragon_pos = 595,
 offset_x = 516,
 offset_y = 32,
 target = -1,
-through = 0,
+through = -1,
 timeout = 0,
 world = [],
 
@@ -55,7 +56,10 @@ move = i => {
     clearTimeout(timeout);
     render();
     if (world[i] > 0 && world[i] < Infinity) {
-        if (i === target) {
+        if (through === dragon_pos) {
+            // Defeat the dragon
+            c.fillRect(0, 0, 480, 480);
+        } else if (i === target) {
             player_pos = through;
             timeout = setTimeout(() => move(i));
         }
@@ -112,7 +116,7 @@ render = (i = 900, v) => {
     distance(player_pos);
 
     //minimap(403, 0x6180d81d8fda); // griffin
-    minimap(595, 0x40249088489); // dragon
+    minimap(dragon_pos, 0x40249088489); // dragon
     minimap(player_pos, 0x1c70711d8ff2); // knight
 
     // Viewport
