@@ -56,27 +56,26 @@ move = i => {
     clearTimeout(timeout);
     render();
     if (world[i] > 0 && world[i] < Infinity) {
+        path(i);
         if (i === target) {
             // Move the player one tile along the path
             player_pos = through;
             if (through === dragon_pos) {
                 // Defeat the dragon
-                dragon_pos = c.fillRect(0, 0, 640, 480);
+                dragon_pos = c.fillRect(0, 0, 480, 480);
+                viewport(player_pos, 0x168164160020); // The checkmark
             } else {
                 // Schedule the next frame of the movement
                 timeout = setTimeout(() => move(i));
             }
         }
-        // path() returns i
-        target = path(i);
+        target = i;
     }
 },
 
 path = i => (
     trace(i),
-    viewport(i, 0x80590db018), // The X
-    i
- ),
+    viewport(i, 0x80590db018)), // The X
 
 scroll = (x, y) => {
     offset_x = x - 30;
@@ -98,8 +97,8 @@ render = (i = 900, v) => {
     c.fillRect(0, 0, 640, 480);
 
     // Sidebar
-    c.fillStyle = palette[3];
-    c.fillRect(490, 160, 140, 310);
+    // c.fillStyle = palette[3];
+    // c.fillRect(490, 160, 140, 310);
 
     // Map
     c.fillStyle = palette[1];
