@@ -55,7 +55,7 @@ distance = i => neighbors(i).map(n =>
 move = i => {
     clearTimeout(timeout);
     render();
-    if (dragon_pos && world[i] > 0 && world[i] < Infinity) {
+    if (world[i] > 0 && world[i] < Infinity) {
         if (i === target) {
             // Move the player one tile along the path
             player_pos = through;
