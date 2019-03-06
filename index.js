@@ -151,4 +151,4 @@ a.onclick = (e, x, y) => (
         0|(x/8 + offset_x - 500) / 4
         + 30 * (0|(y/8 + offset_y - 20) / 4)),
     // Handle minimap clicks
-    510 < x && y < 140 && scroll(x, y));
+    510 < x && y < 130 && scroll(x, y));
