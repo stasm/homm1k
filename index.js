@@ -21,7 +21,9 @@ draw = (x, y, pattern, i) => {
     for (i = 16; i--;) {
         if (c.fillStyle = palette[
                 // Single-digit patters are solid 4x4 sprites of the same color.
-                pattern < 9 ? pattern : ("" + pattern).padStart(16, 0)[i]]) {
+                pattern < 8
+                    ? pattern
+                    : 0|pattern / 8 ** i & 7]) {
             c.fillRect(x + (i % 4), y + (0|i / 4), 1, 1);
         }
     }
@@ -62,7 +64,7 @@ move = i => {
 
 path = i => (
     trace(i),
-    indicator(i, 30033301310010 /* x */),
+    indicator(i, 0x402c86d80c0 /* x */),
     i
  ),
 
@@ -77,7 +79,7 @@ scroll = (x, y) => {
 
 trace = i => (through = i, neighbors(i).some(n =>
          world[n] === 0 || world[n] < world[i] &&
-             (indicator(n, 30001e5 /* dot */), trace(n)))),
+             (indicator(n, 0x400c0000 /* dot */), trace(n)))),
 
 render = i => {
     // Sidebar
@@ -96,10 +98,10 @@ render = i => {
         let v = 5 * Math.sin((x - 9) * (y - 22) / 80) + Math.sin(i * i) + 3;
 
         draw(4 * x + 500, 4 * y + 20,
-            v > 6 ? 5135111311111111: // rock
-            v > 4 ? 5545544554445515: // tree
+            v > 6 ? 0x249249649acd: // rock
+            v > 4 ? 0xa6d925b25b2d: // tree
             v > 1 ? 5: // grass
-            v > 0 ? 5555555555445444: // bush
+            v > 0 ? 0x92592db6db6d: // bush
             6 // water
         );
 
@@ -111,11 +113,11 @@ render = i => {
 
     draw(
         player_pos % 30 * 4 + 500, (0|player_pos / 30) * 4 + 20,
-        2677037016107070 /* knight */);
+        0x1c70711d8ff2 /* knight */);
 
     draw(
         297 % 30 * 4 + 500, (0|297 / 30) * 4 + 20,
-        2377037003300303 /* griffin */);
+        0x6180d81d8fda /* griffin */);
 
     // Viewport
     c.drawImage(a, offset_x, offset_y, 60, 60, 0, 0, 480, 480);
