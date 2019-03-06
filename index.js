@@ -17,7 +17,7 @@ through = 0,
 timeout = 0,
 world = [],
 
-draw = (x, y, pattern, i) => {
+draw = (pattern, x, y) => {
     for (i = 16; i--;) {
         if (c.fillStyle = palette[
                 // Single-digit patters are solid 4x4 sprites of the same color.
@@ -29,14 +29,17 @@ draw = (x, y, pattern, i) => {
     }
 },
 
-indicator = (i, pattern, x, y) => {
-    x = i % 30 * 4 - offset_x + 500;
-    y = (0|i / 30) * 4 - offset_y + 20;
+minimap = (i, pattern) =>
+    draw(pattern, i % 30 * 4 + 500, (0|i / 30) * 4 + 20),
+
+indicator = (i, pattern) => {
     // Approximate scale(8, 8) and rotate(Math.PI / 4).
-    // c.setTransform(5.6, 5.6, -5.6, 5.6, x*32, y*32);
-    c.setTransform(6, 6, -6, 6, x * 8, y * 8);
-    draw(0, -2, pattern);
+    c.setTransform(6, 6, -6, 6,
+        (i % 30 * 4 + 501 - offset_x) * 8,
+        ((0|i / 30) * 4 + 19 - offset_y) * 8);
+    draw(pattern, 0, 0);
     c.setTransform(1, 0, 0, 1, 0, 0);
+    // try resetTransform
 },
 
 neighbors = i => [
@@ -93,11 +96,9 @@ render = i => {
 
     // Map
     for (i = 30**2; i--;) {
-        let x = i % 30;
-        let y = 0|i / 30;
-        let v = 5 * Math.sin((x - 9) * (y - 22) / 80) + Math.sin(i * i) + 3;
-
-        draw(4 * x + 500, 4 * y + 20,
+        let v = 5 * Math.sin((i % 30 - 9) * (i - 600) / 2e3)
+                + Math.sin(i * i) + 3;
+        minimap(i,
             v > 6 ? 0x249249649acd: // rock
             v > 4 ? 0xa6d925b25b2d: // tree
             v > 1 ? 5: // grass
@@ -111,12 +112,12 @@ render = i => {
     world[player_pos] = 0;
     distance(player_pos);
 
-    draw(
-        player_pos % 30 * 4 + 500, (0|player_pos / 30) * 4 + 20,
+    minimap(
+        player_pos,
         0x1c70711d8ff2 /* knight */);
 
-    draw(
-        297 % 30 * 4 + 500, (0|297 / 30) * 4 + 20,
+    minimap(
+        267,
         0x6180d81d8fda /* griffin */);
 
     // Viewport
