@@ -61,7 +61,8 @@ move = i => {
             player_pos = through;
             if (through === dragon_pos) {
                 // Defeat the dragon
-                dragon_pos = render(), c.fillRect(0, 0, 480, 480);
+                dragon_pos = 0;
+                render();
             } else {
                 // Schedule the next frame of the movement
                 timeout = setTimeout(() => move(i));
@@ -93,15 +94,14 @@ trace = i => (through = i, neighbors(i).some(n =>
              trace(n)))),
 
 render = (i = 900, v) => {
-    // Sidebar
+    // Background
     c.fillStyle = palette[2];
-    c.fillRect(480, 0, 160, 480);
-    c.fillStyle = palette[1];
-    c.fillRect(490, 10, 140, 140);
-    c.fillStyle = palette[3];
-    c.fillRect(490, 160, 140, 310);
+    c.fillRect(0, 0, 640, 480);
 
     // Map
+    c.fillStyle = palette[1];
+    c.fillRect(490, 10, 140, 140);
+
     while (i--) {
         v = 5 * Math.sin((i % 30 - 9) * (i - 600) / 2e3)
                 + Math.sin(i * i) + 3;
@@ -123,8 +123,16 @@ render = (i = 900, v) => {
     minimap(dragon_pos, 0x40249088489); // dragon
     minimap(player_pos, 0x1c70711d8ff2); // knight
 
-    // Viewport
-    c.drawImage(a, offset_x, offset_y, 60, 60, 0, 0, 480, 480);
+    // Draw the playing area and the beige sidebar if we're still playing. Skip
+    // them if the dragon has been defeated.
+    if (dragon_pos) {
+        // Viewport
+        c.drawImage(a, offset_x, offset_y, 60, 60, 0, 0, 480, 480);
+
+        // Sidebar
+        c.fillStyle = palette[3];
+        c.fillRect(490, 160, 140, 310);
+    }
 
     // Overflow border
     c.lineWidth = 2;
