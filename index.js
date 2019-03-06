@@ -140,8 +140,6 @@ render = (i = 900, v) => {
     c.strokeRect(offset_x, offset_y, 60, 60);
 };
 
-render();
-
 a.onclick = (e, x, y) => (
     x = e.x - e.target.offsetLeft,
     y = e.y - e.target.offsetTop,
@@ -152,3 +150,5 @@ a.onclick = (e, x, y) => (
         + 30 * (0|(y/8 + offset_y - 20) / 4)),
     // Handle minimap clicks
     510 < x && y < 130 && scroll(x, y));
+
+render();
