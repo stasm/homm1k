@@ -17,27 +17,27 @@ through = 0,
 timeout = 0,
 world = [],
 
-draw = (pattern, x, y, p = 16) => {
+draw = (sprite, x, y, p = 16) => {
     while (p--) {
         if (c.fillStyle = palette[
-                // Single-digit patters are solid 4x4 sprites of the same color.
-                pattern < 8
-                    ? pattern
-                    : 0|pattern / 8 ** p & 7]) {
+                // Single-digit sprites are solid 4x4 blocks of the same color.
+                sprite < 8
+                    ? sprite
+                    : 0|sprite / 8 ** p & 7]) {
             c.fillRect(x + (p % 4), y + (0|p / 4), 1, 1);
         }
     }
 },
 
-minimap = (i, pattern) =>
-    draw(pattern, i % 30 * 4 + 500, (0|i / 30) * 4 + 20),
+minimap = (i, sprite) =>
+    draw(sprite, i % 30 * 4 + 500, (0|i / 30) * 4 + 20),
 
-indicator = (i, pattern) => {
+viewport = (i, sprite) => {
     // Approximate scale(8, 8) and rotate(Math.PI / 4).
     c.setTransform(6, 6, -6, 6,
         (i % 30 * 4 + 501 - offset_x) * 8,
         ((0|i / 30) * 4 + 19 - offset_y) * 8);
-    draw(pattern, 0, 0);
+    draw(sprite, 0, 0);
     c.resetTransform();
 },
 
@@ -66,7 +66,7 @@ move = i => {
 
 path = i => (
     trace(i),
-    indicator(i, 0x402c86d80c0 /* x */),
+    viewport(i, 0x402c86d80c0), // The X
     i
  ),
 
@@ -81,7 +81,8 @@ scroll = (x, y) => {
 
 trace = i => (through = i, neighbors(i).some(n =>
          world[n] === 0 || world[n] < world[i] &&
-             (indicator(n, 0x400c0000 /* dot */), trace(n)))),
+             (viewport(n, 0x400c0000), // The dot
+             trace(n)))),
 
 render = (i = 900, v) => {
     // Sidebar
@@ -111,13 +112,8 @@ render = (i = 900, v) => {
     world[player_pos] = 0;
     distance(player_pos);
 
-    minimap(
-        player_pos,
-        0x1c70711d8ff2 /* knight */);
-
-    minimap(
-        267,
-        0x6180d81d8fda /* griffin */);
+    minimap(player_pos, 0x1c70711d8ff2); // knight
+    minimap(267, 0x6180d81d8fda); // griffin
 
     // Viewport
     c.drawImage(a, offset_x, offset_y, 60, 60, 0, 0, 480, 480);
