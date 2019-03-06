@@ -17,14 +17,14 @@ through = 0,
 timeout = 0,
 world = [],
 
-draw = (pattern, x, y) => {
-    for (i = 16; i--;) {
+draw = (pattern, x, y, p = 16) => {
+    while (p--) {
         if (c.fillStyle = palette[
                 // Single-digit patters are solid 4x4 sprites of the same color.
                 pattern < 8
                     ? pattern
-                    : 0|pattern / 8 ** i & 7]) {
-            c.fillRect(x + (i % 4), y + (0|i / 4), 1, 1);
+                    : 0|pattern / 8 ** p & 7]) {
+            c.fillRect(x + (p % 4), y + (0|p / 4), 1, 1);
         }
     }
 },
@@ -83,7 +83,7 @@ trace = i => (through = i, neighbors(i).some(n =>
          world[n] === 0 || world[n] < world[i] &&
              (indicator(n, 0x400c0000 /* dot */), trace(n)))),
 
-render = i => {
+render = (i = 900, v) => {
     // Sidebar
     c.fillStyle = palette[2];
     c.fillRect(480, 0, 160, 480);
@@ -94,8 +94,8 @@ render = i => {
     c.fillRect(500, 170, 120, 290);
 
     // Map
-    for (i = 30**2; i--;) {
-        let v = 5 * Math.sin((i % 30 - 9) * (i - 600) / 2e3)
+    while (i--) {
+        v = 5 * Math.sin((i % 30 - 9) * (i - 600) / 2e3)
                 + Math.sin(i * i) + 3;
         minimap(i,
             v > 6 ? 0x249249649acd: // rock
