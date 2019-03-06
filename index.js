@@ -61,7 +61,7 @@ move = i => {
             player_pos = through;
             if (through === dragon_pos) {
                 // Defeat the dragon
-                dragon_pos = c.fillRect(0, 0, 480, 480);
+                dragon_pos = render(), c.fillRect(0, 0, 480, 480);
             } else {
                 // Schedule the next frame of the movement
                 timeout = setTimeout(() => move(i));
