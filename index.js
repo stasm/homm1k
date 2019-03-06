@@ -38,8 +38,7 @@ indicator = (i, pattern) => {
         (i % 30 * 4 + 501 - offset_x) * 8,
         ((0|i / 30) * 4 + 19 - offset_y) * 8);
     draw(pattern, 0, 0);
-    c.setTransform(1, 0, 0, 1, 0, 0);
-    // try resetTransform
+    c.resetTransform();
 },
 
 neighbors = i => [
