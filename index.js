@@ -85,9 +85,9 @@ render = i => {
     c.fillRect(480, 0, 160, 480);
     c.fillStyle = palette[1];
     c.fillRect(490, 10, 140, 140);
-    // c.fillRect(490, 160, 140, 310);
-    // c.fillStyle = palette[3];
-    // c.fillRect(500, 170, 120, 290);
+    c.fillRect(490, 160, 140, 310);
+    c.fillStyle = palette[3];
+    c.fillRect(500, 170, 120, 290);
 
     // Map
     for (i = 30**2; i--;) {
@@ -112,6 +112,10 @@ render = i => {
     draw(
         player_pos % 30 * 4 + 500, (0|player_pos / 30) * 4 + 20,
         2677037016107070 /* knight */);
+
+    draw(
+        297 % 30 * 4 + 500, (0|297 / 30) * 4 + 20,
+        2377037003300303 /* griffin */);
 
     // Viewport
     c.drawImage(a, offset_x, offset_y, 60, 60, 0, 0, 480, 480);
