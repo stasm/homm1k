@@ -15,7 +15,7 @@ offset_x = 516,
 offset_y = 32,
 target = -1,
 through = -1,
-timeout = 0,
+timeout = -1,
 world = [],
 
 draw = (sprite, x, y, p = 16) => {
@@ -55,13 +55,17 @@ distance = i => neighbors(i).map(n =>
 move = i => {
     clearTimeout(timeout);
     render();
-    if (world[i] > 0 && world[i] < Infinity) {
-        if (through === dragon_pos) {
-            // Defeat the dragon
-            c.fillRect(0, 0, 480, 480);
-        } else if (i === target) {
+    if (dragon_pos && world[i] > 0 && world[i] < Infinity) {
+        if (i === target) {
+            // Move the player one tile along the path
             player_pos = through;
-            timeout = setTimeout(() => move(i));
+            if (through === dragon_pos) {
+                // Defeat the dragon
+                dragon_pos = c.fillRect(0, 0, 480, 480);
+            } else {
+                // Schedule the next frame of the movement
+                timeout = setTimeout(() => move(i));
+            }
         }
         // path() returns i
         target = path(i);
