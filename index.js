@@ -1,7 +1,7 @@
 c.imageSmoothingEnabled = false;
 var palette = [
     ,       // transparent
-    "#000", // 1 black
+    "#111", // 1 black
     "#900", // 2 red
     "#c96", // 3 beige
     "#382", // 4 light green
@@ -111,8 +111,9 @@ render = (i = 900, v) => {
     world[player_pos] = 0;
     distance(player_pos);
 
+    //minimap(403, 0x6180d81d8fda); // griffin
+    minimap(595, 0x40249088489); // dragon
     minimap(player_pos, 0x1c70711d8ff2); // knight
-    minimap(267, 0x6180d81d8fda); // griffin
 
     // Viewport
     c.drawImage(a, offset_x, offset_y, 60, 60, 0, 0, 480, 480);
