@@ -90,9 +90,8 @@ render = (i = 900, v) => {
     c.fillRect(480, 0, 160, 480);
     c.fillStyle = palette[1];
     c.fillRect(490, 10, 140, 140);
-    c.fillRect(490, 160, 140, 310);
     c.fillStyle = palette[3];
-    c.fillRect(500, 170, 120, 290);
+    c.fillRect(490, 160, 140, 310);
 
     // Map
     while (i--) {
