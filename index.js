@@ -35,8 +35,8 @@ minimap = (i, sprite) =>
 viewport = (i, sprite) => {
     // Approximate scale(8, 8) and rotate(Math.PI / 4).
     c.setTransform(6, 6, -6, 6,
-        (i % 30 * 4 + 501 - offset_x) * 8,
-        ((0|i / 30) * 4 + 19 - offset_y) * 8);
+        (i % 30 * 4 + 502 - offset_x) * 8,
+        ((0|i / 30) * 4 + 20 - offset_y) * 8);
     draw(sprite, 0, 0);
     c.resetTransform();
 },
@@ -66,7 +66,7 @@ move = i => {
 
 path = i => (
     trace(i),
-    viewport(i, 0x402c86d80c0), // The X
+    viewport(i, 0x80590db018), // The X
     i
  ),
 
@@ -81,7 +81,7 @@ scroll = (x, y) => {
 
 trace = i => (through = i, neighbors(i).some(n =>
          world[n] === 0 || world[n] < world[i] &&
-             (viewport(n, 0x400c0000), // The dot
+             (viewport(n, 0x8018000), // The dot
              trace(n)))),
 
 render = (i = 900, v) => {
