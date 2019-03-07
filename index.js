@@ -103,7 +103,8 @@ trace = i => (next = i, neighbors(i).some(n =>
 
 render = (i = 900, v) => {
     // Background
-    c.fillStyle = palette[2];
+    // Also set the line width for the minimap visible area
+    c.fillStyle = palette[c.lineWidth = 2];
     c.fillRect(0, 0, 640, 480);
 
     // Sidebar
@@ -143,8 +144,7 @@ render = (i = 900, v) => {
     // Viewport
     c.drawImage(a, offset_x, offset_y, 60, 60, 0, 0, 480, 480);
 
-    // Overflow border
-    c.lineWidth = 2;
+    // Minimap visible area border
     c.strokeStyle = palette[7];
     c.strokeRect(offset_x, offset_y, 60, 60);
 };
