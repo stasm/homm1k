@@ -61,6 +61,8 @@ move = i => {
         if (i === target) {
             // Move the player one tile along the path
             player_pos = through;
+            neighbors(dragon_pos).sort(n => Math.sin(n * date)).some(n =>
+                world[n] > 2 && world[n] >= world[dragon_pos] && (dragon_pos = n));
             if (through === dragon_pos) {
                 // Defeat the dragon
                 dragon_pos = c.fillRect(0, 0, 640, 480);
