@@ -57,7 +57,7 @@ draw = (sprite, x, y) => {
         // pixel, followed by an AND with 0b111 to get just the value of that
         // pixel. The value is an index into the array of colors.
         if (c.fillStyle = palette[sprite < 8
-                    ? sprite : 0|sprite / 8 ** p & 7]) {
+                ? sprite : 0|sprite / 8 ** p & 7]) {
             c.fillRect(x + (p % 4), y + (0|p / 4), 1, 1);
         }
     }
@@ -72,9 +72,10 @@ minimap = (i, sprite) =>
 // makes the X look like an x :)
 viewport = (i, sprite) => {
     // Approximate scale(8, 8) and rotate(Math.PI / 4).
-    c.setTransform(6, 6, -6, 6,
-        (i % 30 * 4 + 502 - offset_x) * 8,
-        ((0|i / 30) * 4 + 20 - offset_y) * 8);
+    c.setTransform(
+            6, 6, -6, 6,
+            (i % 30 * 4 + 502 - offset_x) * 8,
+            ((0|i / 30) * 4 + 20 - offset_y) * 8);
     draw(sprite, 0, 0);
     c.resetTransform();
 },
@@ -97,8 +98,8 @@ neighbors = i => [
 // score of the neighbor is lower than the preivous one, assign it and
 // recursively call distance on the neighbor's neighbors.
 distance = i => neighbors(i).map(n =>
-    world[i] + 1 < world[n] &&
-        (world[n] = world[i] + 1, distance(n))),
+    world[i] + 1 < world[n]
+    && (world[n] = world[i] + 1, distance(n))),
 
 // Trace the path connecting the player and the target. The tracing starts at
 // the target and follows the descending gradient of distance scores stored in
@@ -112,9 +113,9 @@ distance = i => neighbors(i).map(n =>
 // updated it will hold the index of the tile which is the closest to the player
 // and on the path to the target.
 trace = i => (next = i, neighbors(i).some(n =>
-         world[n] == 0 || world[n] < world[i] &&
-             (viewport(n, 0x8018000), // The dot
-             trace(n)))),
+     world[n] == 0 || world[n] < world[i]
+     && (viewport(n, 0x8018000), // The dot
+         trace(n)))),
 
 // Plan the player's movement in response to a click.
 plan = i => {
@@ -150,11 +151,11 @@ render = (i = 900, v) => {
                 + Math.sin(timestamp % i) + 3;
 
         minimap(i,
-            v > 6 ? 0x249249649acd: // rock
-            v > 4 ? 0xa6d925b25b2d: // tree
-            v > 1 ? 5: // grass
-            v > 0 ? 0x92592db6db6d: // bush
-            6 // water
+                v > 6 ? 0x249249649acd: // rock
+                v > 4 ? 0xa6d925b25b2d: // tree
+                v > 1 ? 5: // grass
+                v > 0 ? 0x92592db6db6d: // bush
+                6 // water
         );
 
         // palette here is used as a non-numerical value (also when coerced)
