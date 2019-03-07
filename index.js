@@ -55,45 +55,14 @@ distance = i => neighbors(i).map(n =>
     world[i] + 1 < world[n] &&
         (world[n] = world[i] + 1, distance(n))),
 
-move = i => {
-    clearTimeout(timeout);
-    render();
+plan = i => {
+    // If the tile is reachable...
     if (world[i] > 0 && world[i] < Infinity) {
-        path(i);
-        if (i == target) {
-            // Move the player one tile along the path.
-            player_pos = next;
-            // Move the dragon one tile away from the player, if possible.
-            neighbors(dragon_pos).some(n =>
-                Math.sin(n * Date.now()) > .3
-                && world[n] > world[dragon_pos]
-                && (dragon_pos = n));
-
-            if (next ^ dragon_pos) { // next !== dragon_pos
-                // If the next player move is not occupied by the dragon,
-                // schedule the next frame of the movement. a ^ b stands for a != b.
-                timeout = setTimeout(() => move(i));
-            } else {
-                // Defeat the dragon
-                dragon_pos = c.fillRect(0, 0, 640, 480);
-                viewport(player_pos, 0x168164160020); // The checkmark
-            }
-        }
-        target = i;
+        // Trace the path from it to the player.
+        trace(target = i);
+        // Draw the X mark.
+        viewport(i, 0x80590db018); // The X
     }
-},
-
-path = i => (
-    trace(i),
-    viewport(i, 0x80590db018)), // The X
-
-scroll = (x, y) => {
-    offset_x = x - 30;
-    offset_y = y - 30;
-    render();
-    // Draw the path to the current target, but only if the player hasn't
-    // reached it yet.
-    world[target] && path(target);
 },
 
 trace = i => (next = i, neighbors(i).some(n =>
@@ -102,6 +71,7 @@ trace = i => (next = i, neighbors(i).some(n =>
              trace(n)))),
 
 render = (i = 900, v) => {
+    if (dragon_pos) {
     // Background
     // Also set the line width for the minimap visible area
     c.fillStyle = palette[c.lineWidth = 2];
@@ -147,17 +117,39 @@ render = (i = 900, v) => {
     // Minimap visible area border
     c.strokeStyle = palette[7];
     c.strokeRect(offset_x, offset_y, 60, 60);
+
+    // Move the player if they haven't reached the target yet.
+    if (world[target]) {
+        // Re-draw the path to the target.
+        plan(target);
+
+        // Move the dragon one tile away from the player, if possible.
+        neighbors(dragon_pos).some(n =>
+            Math.sin(n * Date.now()) > .3
+            && world[n] > world[dragon_pos]
+            && (dragon_pos = n));
+
+        // Move the player one tile along the path.
+        if (dragon_pos == (player_pos = next)) {
+            // Defeat the dragon
+            dragon_pos = c.fillRect(0, 0, 640, 480);
+            viewport(player_pos, 0x168164160020); // The checkmark
+        }
+    }
+    }
 };
 
 a.onclick = (e, x, y) => (
     x = e.x - e.target.offsetLeft,
     y = e.y - e.target.offsetTop,
     // Handle viewport clicks
-    x < 480 && move(
+    x < 480 && dragon_pos && plan(
         // Transform x, y into an index into the world array
         0|(x/8 + offset_x - 500) / 4
         + 30 * (0|(y/8 + offset_y - 20) / 4)),
     // Handle minimap clicks
-    500 < x && y < 140 && scroll(x, y));
+    500 < x && y < 140 && (
+        offset_x = x - 30,
+        offset_y = y - 30));
 
-render();
+setInterval(render, 200);

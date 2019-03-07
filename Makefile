@@ -14,6 +14,7 @@ regpacked.js: minified.js
 		--withMath 0 \
 		--contextVariableName c \
 		--hash2DContext 1 \
+		--wrapInSetInterval 1 \
 		> $@
 
 clean:
