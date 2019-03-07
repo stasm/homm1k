@@ -1,0 +1,12 @@
+{
+  "name": "homm1k",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A homage to HoMM for JS1K 2019",
+  "author": "Staś Małolepszy <stas@piesku.com>",
+  "license": "ISC",
+  "dependencies": {
+    "regpack": "^5.0.1",
+    "terser": "^3.16.1"
+  }
+}
