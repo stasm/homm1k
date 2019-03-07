@@ -60,18 +60,19 @@ move = i => {
     render();
     if (world[i] > 0 && world[i] < Infinity) {
         path(i);
-        if (i === target) {
+        if (i == target) {
             // Move the player one tile along the path
             player_pos = through;
             neighbors(dragon_pos).sort(n => Math.sin(n * date)).some(n =>
                 world[n] > 2 && world[n] >= world[dragon_pos] && (dragon_pos = n));
-            if (through === dragon_pos) {
+            if (through ^ dragon_pos) { // through !== dragon_pos
+                // If the next player move is not occupied by the dragon,
+                // schedule the next frame of the movement. a ^ b stands for a != b.
+                timeout = setTimeout(() => move(i));
+            } else {
                 // Defeat the dragon
                 dragon_pos = c.fillRect(0, 0, 640, 480);
                 viewport(player_pos, 0x168164160020); // The checkmark
-            } else {
-                // Schedule the next frame of the movement
-                timeout = setTimeout(() => move(i));
             }
         }
         target = i;
@@ -92,7 +93,7 @@ scroll = (x, y) => {
 },
 
 trace = i => (through = i, neighbors(i).some(n =>
-         world[n] === 0 || world[n] < world[i] &&
+         world[n] == 0 || world[n] < world[i] &&
              (viewport(n, 0x8018000), // The dot
              trace(n)))),
 
