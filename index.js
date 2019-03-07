@@ -17,6 +17,7 @@ target = -1,
 through = -1,
 timeout = -1,
 world = [],
+date = Date.now(),
 
 draw = (sprite, x, y, p = 16) => {
     while (p--) {
@@ -105,8 +106,10 @@ render = (i = 900, v) => {
     c.fillRect(490, 10, 140, 140);
 
     while (i--) {
-        v = 5 * Math.sin((i % 30 - 20) * (i - 300) / 3e3)
-                + Math.sin(i * i) + 3;
+        // Generate the terrain with a bit of random noise.
+        v = 5 * Math.sin((i % 30 - 17) * (i - 300) / 3e3)
+                + Math.sin(date % i) + 3;
+
         minimap(i,
             v > 6 ? 0x249249649acd: // rock
             v > 4 ? 0xa6d925b25b2d: // tree
