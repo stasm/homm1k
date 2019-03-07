@@ -15,7 +15,6 @@ offset_x = 508,
 offset_y = 28,
 target = -1,
 next = -1,
-timeout = -1,
 world = [],
 // Seed for noise used in terrain generation.
 date = Date.now(),
@@ -71,7 +70,6 @@ trace = i => (next = i, neighbors(i).some(n =>
              trace(n)))),
 
 render = (i = 900, v) => {
-    if (dragon_pos) {
     // Background
     // Also set the line width for the minimap visible area
     c.fillStyle = palette[c.lineWidth = 2];
@@ -136,8 +134,9 @@ render = (i = 900, v) => {
             viewport(player_pos, 0x168164160020); // The checkmark
         }
     }
-    }
-};
+},
+// Render the game while the dragon is roaming.
+tick = _ => dragon_pos && render();
 
 a.onclick = (e, x, y) => (
     x = e.x - e.target.offsetLeft,
@@ -152,4 +151,4 @@ a.onclick = (e, x, y) => (
         offset_x = x - 30,
         offset_y = y - 30));
 
-setInterval(render, 200);
+setInterval(tick, 200);
