@@ -51,14 +51,13 @@ timestamp = Date.now(),
 // sprite. Free bytes!
 draw = (sprite, x, y) => {
     for (p=16; p--;) {
-        if (c.fillStyle = palette[
-                // Single-digit sprites are solid 4x4 blocks of the same color.
-                // Regular sprites are decoded into pixels by dividing the whole
-                // sprite by a factor of 8 corresponding to the position of the
-                // currently drawn pixel, followed by an AND with 0b111 to get
-                // just the value of that pixel. The value is an index into the
-                // array of colors.
-                sprite < 8 ? sprite : 0|sprite / 8 ** p & 7]) {
+        // Single-digit sprites are solid 4x4 blocks of the same color. Regular
+        // sprites are decoded into pixels by dividing the whole sprite by a
+        // factor of 8 corresponding to the position of the currently drawn
+        // pixel, followed by an AND with 0b111 to get just the value of that
+        // pixel. The value is an index into the array of colors.
+        if (c.fillStyle = palette[sprite < 8
+                    ? sprite : 0|sprite / 8 ** p & 7]) {
             c.fillRect(x + (p % 4), y + (0|p / 4), 1, 1);
         }
     }
@@ -216,7 +215,7 @@ render = (i = 900, v) => {
             // Clear the screen and draw the checkmark. `critter` is set to
             // undefined and acts as a flag to stop rendering.
             critter = c.fillRect(0, 0, 640, 480);
-            viewport(player, 0x168164160020);
+            viewport(player, 0x168164160020); // The checkmark
         }
     }
 };
