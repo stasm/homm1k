@@ -237,6 +237,7 @@ a.onclick = (e,
 // The visible minimap fragment is drawn into the main viewport scaled up via
 // drawImage(). Preserve the sharpness of pixels.
 c.imageSmoothingEnabled = false;
+b.bgColor = palette[3];
 
 // Start the game loop.
 setInterval(tick, 200);
