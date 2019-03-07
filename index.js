@@ -188,9 +188,9 @@ render = (i = 900, v) => {
 // Render the game only while the dragon is roaming.
 tick = _ => enemy_pos && render();
 
-a.onclick = (e, x, y) => (
-    x = e.x - e.target.offsetLeft,
-    y = e.y - e.target.offsetTop,
+a.onclick = (e,
+        x = e.x - e.target.offsetLeft,
+        y = e.y - e.target.offsetTop) => (
     // Handle viewport clicks
     x < 480 && enemy_pos && plan(
         // Transform x, y into an index into the world array
