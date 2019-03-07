@@ -1,4 +1,3 @@
-c.imageSmoothingEnabled = false;
 var palette = [
     ,       // transparent
     "#111", // 1 black
@@ -201,4 +200,9 @@ a.onclick = (e,
         offset_x = x - 30,
         offset_y = y - 30));
 
+// The visible minimap fragment is drawn into the main viewport scaled up via
+// drawImage(). Preserve the sharpness of pixels.
+c.imageSmoothingEnabled = false;
+
+// Start the game loop.
 setInterval(tick, 200);
