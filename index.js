@@ -17,6 +17,7 @@ target = -1,
 through = -1,
 timeout = -1,
 world = [],
+// Seed for noise used in terrain generation and the dragon's movement.
 date = Date.now(),
 
 draw = (sprite, x, y, p = 16) => {
@@ -47,7 +48,8 @@ neighbors = i => [
     // Cardinal directions: N W S E
     i - 30, i - 1, i + 30, i + 1,
     // Diagonal directions: NW SW SE NE
-    i - 31, i + 29, i + 31, i - 29],
+    i - 31, i + 29, i + 31, i - 29,
+],
 
 distance = i => neighbors(i).map(n =>
     world[i] + 1 < world[n] &&
