@@ -37,6 +37,9 @@ world = [],
 // Seed for noise used in terrain generation.
 timestamp = Date.now(),
 
+
+// DRAWING
+
 // A generic draw function capable of drawing 4x4 sprites or solid 4x4 blocks of
 // color. Sprites encode 48 bits of data: 7 colors or transparency (3 bits) for
 // each of the 16 pixels. When written as octal numbers, the pixel pattern is
@@ -73,6 +76,9 @@ viewport = (i, sprite) => {
     c.resetTransform();
 },
 
+
+// PATH-FINDING
+
 neighbors = i => [
     // Cardinal directions: N W S E
     i - 30, i - 1, i + 30, i + 1,
@@ -84,6 +90,11 @@ distance = i => neighbors(i).map(n =>
     world[i] + 1 < world[n] &&
         (world[n] = world[i] + 1, distance(n))),
 
+trace = i => (next = i, neighbors(i).some(n =>
+         world[n] == 0 || world[n] < world[i] &&
+             (viewport(n, 0x8018000), // The dot
+             trace(n)))),
+
 plan = i => {
     // If the tile is reachable...
     if (world[i] > 0 && world[i] < Infinity) {
@@ -94,10 +105,11 @@ plan = i => {
     }
 },
 
-trace = i => (next = i, neighbors(i).some(n =>
-         world[n] == 0 || world[n] < world[i] &&
-             (viewport(n, 0x8018000), // The dot
-             trace(n)))),
+
+// GAME LOOP
+
+// Render the game only while the dragon is roaming.
+tick = _ => enemy_pos && render(),
 
 render = (i = 900, v) => {
     // Draw the red background.
@@ -183,20 +195,19 @@ render = (i = 900, v) => {
             viewport(player_pos, 0x168164160020);
         }
     }
-},
-// Render the game only while the dragon is roaming.
-tick = _ => enemy_pos && render();
+};
 
 a.onclick = (e,
         x = e.x - e.target.offsetLeft,
         y = e.y - e.target.offsetTop) => (
     // Handle viewport clicks
     x < 480 && enemy_pos && plan(
-        // Transform x, y into an index into the world array
+        // Transform x, y into an index into the world array.
         0|(x/8 + offset_x - 500) / 4
         + 30 * (0|(y/8 + offset_y - 20) / 4)),
     // Handle minimap clicks
     500 < x && y < 140 && (
+        // Adjust the offset of the visible minimap fragment.
         offset_x = x - 30,
         offset_y = y - 30));
 
