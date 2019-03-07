@@ -115,7 +115,10 @@ render = (i = 900, v) => {
             6 // water
         );
 
-        world[i] = 0 < v && v <= 4 ? Infinity : "x";
+        // palette here is used as a non-numerical value (also when coerced)
+        // which doesn't compare as less than nor greater than a number when
+        // compared in distance(). It represents non-passable terrain.
+        world[i] = 0 < v && v <= 4 ? Infinity : palette;
     }
 
     world[player_pos] = 0;
