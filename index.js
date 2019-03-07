@@ -63,8 +63,11 @@ move = i => {
         if (i == target) {
             // Move the player one tile along the path
             player_pos = through;
-            neighbors(dragon_pos).sort(n => Math.sin(n * date)).some(n =>
-                world[n] > 2 && world[n] >= world[dragon_pos] && (dragon_pos = n));
+            neighbors(dragon_pos).some(n =>
+                Math.sin(date / n) > 0
+                && world[n] > 2
+                && world[n] >= world[dragon_pos]
+                && (dragon_pos = n));
             if (through ^ dragon_pos) { // through !== dragon_pos
                 // If the next player move is not occupied by the dragon,
                 // schedule the next frame of the movement. a ^ b stands for a != b.
