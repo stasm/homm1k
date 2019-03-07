@@ -20,8 +20,8 @@ world = [],
 // Seed for noise used in terrain generation and the dragon's movement.
 date = Date.now(),
 
-draw = (sprite, x, y, p = 16) => {
-    while (p--) {
+draw = (sprite, x, y) => {
+    for (p=16; p--;) {
         if (c.fillStyle = palette[
                 // Single-digit sprites are solid 4x4 blocks of the same color.
                 sprite < 8
