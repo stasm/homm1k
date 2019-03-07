@@ -10,7 +10,7 @@ var palette = [
     "#fff", // 7 white
 ],
 player_pos = 335,
-dragon_pos = 373,
+enemy_pos = 373,
 offset_x = 508,
 offset_y = 28,
 target = -1,
@@ -105,9 +105,16 @@ render = (i = 900, v) => {
     world[player_pos] = 0;
     distance(player_pos);
 
-    //minimap(403, 0x6180d81d8fda); // griffin
-    minimap(dragon_pos, 0x40249088489); // dragon
-    minimap(player_pos, 0x1c70711d8ff2); // knight
+    // minimap(enemy_pos, 0x6180d81d8fda); // griffin
+    // minimap(enemy_pos, 0x40249088489); // black dragon
+    // minimap(enemy_pos, 0x80492050252); // red dragon
+    minimap(enemy_pos, 0x208048088489); // gargoyle
+    // minimap(enemy_pos, 0x249049040051); // snake
+    // minimap(enemy_pos, 0x208248088489); // dread knight
+    // minimap(enemy_pos, 0x4124904900a); // godzilla
+    // minimap(enemy_pos, 0x4824804900a); // t-rex
+
+    minimap(player_pos, 0x1c70711d8ff2); // player
 
     // Viewport
     c.drawImage(a, offset_x, offset_y, 60, 60, 0, 0, 480, 480);
@@ -122,27 +129,27 @@ render = (i = 900, v) => {
         plan(target);
 
         // Move the dragon one tile away from the player, if possible.
-        neighbors(dragon_pos).some(n =>
+        neighbors(enemy_pos).some(n =>
             Math.sin(n * Date.now()) > .3
-            && world[n] > world[dragon_pos]
-            && (dragon_pos = n));
+            && world[n] > world[enemy_pos]
+            && (enemy_pos = n));
 
         // Move the player one tile along the path.
-        if (dragon_pos == (player_pos = next)) {
+        if (enemy_pos == (player_pos = next)) {
             // Defeat the dragon
-            dragon_pos = c.fillRect(0, 0, 640, 480);
+            enemy_pos = c.fillRect(0, 0, 640, 480);
             viewport(player_pos, 0x168164160020); // The checkmark
         }
     }
 },
 // Render the game while the dragon is roaming.
-tick = _ => dragon_pos && render();
+tick = _ => enemy_pos && render();
 
 a.onclick = (e, x, y) => (
     x = e.x - e.target.offsetLeft,
     y = e.y - e.target.offsetTop,
     // Handle viewport clicks
-    x < 480 && dragon_pos && plan(
+    x < 480 && enemy_pos && plan(
         // Transform x, y into an index into the world array
         0|(x/8 + offset_x - 500) / 4
         + 30 * (0|(y/8 + offset_y - 20) / 4)),
