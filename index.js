@@ -14,10 +14,10 @@ dragon_pos = 373,
 offset_x = 508,
 offset_y = 28,
 target = -1,
-through = -1,
+next = -1,
 timeout = -1,
 world = [],
-// Seed for noise used in terrain generation and the dragon's movement.
+// Seed for noise used in terrain generation.
 date = Date.now(),
 
 draw = (sprite, x, y) => {
@@ -61,14 +61,15 @@ move = i => {
     if (world[i] > 0 && world[i] < Infinity) {
         path(i);
         if (i == target) {
-            // Move the player one tile along the path
-            player_pos = through;
+            // Move the player one tile along the path.
+            player_pos = next;
+            // Move the dragon one tile away from the player, if possible.
             neighbors(dragon_pos).some(n =>
-                Math.sin(date / n) > 0
-                && world[n] > 2
-                && world[n] >= world[dragon_pos]
+                Math.sin(n * Date.now()) > .3
+                && world[n] > world[dragon_pos]
                 && (dragon_pos = n));
-            if (through ^ dragon_pos) { // through !== dragon_pos
+
+            if (next ^ dragon_pos) { // next !== dragon_pos
                 // If the next player move is not occupied by the dragon,
                 // schedule the next frame of the movement. a ^ b stands for a != b.
                 timeout = setTimeout(() => move(i));
@@ -95,7 +96,7 @@ scroll = (x, y) => {
     world[target] && path(target);
 },
 
-trace = i => (through = i, neighbors(i).some(n =>
+trace = i => (next = i, neighbors(i).some(n =>
          world[n] == 0 || world[n] < world[i] &&
              (viewport(n, 0x8018000), // The dot
              trace(n)))),
