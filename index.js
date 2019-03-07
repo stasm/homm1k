@@ -9,10 +9,10 @@ var palette = [
     "#036", // 6 blue
     "#fff", // 7 white
 ],
-player_pos = 220,
-dragon_pos = 706,
-offset_x = 514,
-offset_y = 28,
+player_pos = 248,
+dragon_pos = 704,
+offset_x = 504,
+offset_y = 24,
 target = -1,
 through = -1,
 timeout = -1,
@@ -105,7 +105,7 @@ render = (i = 900, v) => {
     c.fillRect(490, 10, 140, 140);
 
     while (i--) {
-        v = 5 * Math.sin((i % 30 - 9) * (i - 660) / 2e3)
+        v = 5 * Math.sin((i % 30 - 7) * (i - 545) / 3e3)
                 + Math.sin(i * i) + 3;
         minimap(i,
             v > 6 ? 0x249249649acd: // rock
