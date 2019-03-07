@@ -9,10 +9,10 @@ var palette = [
     "#fff", // 7 white
 ],
 
-// The position of the player and the enemy expressed as an index into the 30x30
-// world array.
-player_pos = 335,
-enemy_pos = 373,
+// The position of the player and the critter expressed as an index into the
+// 30x30 world array.
+player = 335,
+critter = 373,
 
 // The offset of the currently viisble area of the minimap, in canvas pixels
 // from the origin. This makes it easy to update it when scrolling the view, to
@@ -132,7 +132,7 @@ plan = i => {
 // GAME LOOP
 
 // Render the game only while the dragon is roaming.
-tick = _ => enemy_pos && render(),
+tick = _ => critter && render(),
 
 render = (i = 900, v) => {
     // Draw the red background.
@@ -164,15 +164,15 @@ render = (i = 900, v) => {
         world[i] = 0 < v && v <= 4 ? Infinity : palette;
     }
 
-    // minimap(enemy_pos, 0x6180d81d8fda); // griffin
-    // minimap(enemy_pos, 0x40249088489); // black dragon
-    // minimap(enemy_pos, 0x80492050252); // red dragon
-    // minimap(enemy_pos, 0x249049040051); // snake
-    // minimap(enemy_pos, 0x208248088489); // dread knight
-    // minimap(enemy_pos, 0x4124904900a); // godzilla
-    // minimap(enemy_pos, 0x4824804900a); // t-rex
-    minimap(enemy_pos, 0x208048088489); // gargoyle
-    minimap(player_pos, 0x1c70711d8ff2); // player
+    // minimap(critter, 0x6180d81d8fda); // griffin
+    // minimap(critter, 0x40249088489); // black dragon
+    // minimap(critter, 0x80492050252); // red dragon
+    // minimap(critter, 0x249049040051); // snake
+    // minimap(critter, 0x208248088489); // dread knight
+    // minimap(critter, 0x4124904900a); // godzilla
+    // minimap(critter, 0x4824804900a); // t-rex
+    minimap(critter, 0x208048088489); // gargoyle
+    minimap(player, 0x1c70711d8ff2); // knight
 
     // Draw the main viewport by copying and scaling the minimap up.
     c.drawImage(a, offset_x, offset_y, 60, 60, 0, 0, 480, 480);
@@ -182,8 +182,8 @@ render = (i = 900, v) => {
     c.strokeRect(offset_x, offset_y, 60, 60);
 
     // Populate the world array with distances of each tile to the player.
-    world[player_pos] = 0;
-    distance(player_pos);
+    world[player] = 0;
+    distance(player);
 
     // Move the player if they haven't reached the target yet.
     if (world[target]) {
@@ -191,31 +191,32 @@ render = (i = 900, v) => {
         plan(target);
 
         // Move the dragon one tile away from the player, if possible.
-        neighbors(enemy_pos).some(n =>
+        neighbors(critter).some(n =>
             // Shuffle the neighboring tiles by mixing the timestamp (a
             // pseudo-random component) in and testing sin() against a
             // threshold. The threshold is set to reject more tiles than it
-            // accepts, which makes the enemy skip some moves in order to mitigate
-            // the consequence of the > check on the next line.
+            // accepts, which makes the critter skip some moves in order to
+            // mitigate the consequence of the > check on the next line.
             Math.sin(n * Date.now()) > .3
-            // We use the > check rather than >= to avoid the enemy swapping
+            // We use the > check rather than >= to avoid the critter swapping
             // places with the player when they're next to each other. With >,
-            // the enemy is only allowed to run away from the player. E.g. if
-            // the player is at NW, the enemy will choose between S, SE, and E.
-            // Without the skewed threshold above this movement pattern makes
-            // the enemy hard to catch: it runs away fast and doesn't stray.
-            && world[n] > world[enemy_pos]
-            // If the tile is a good candidate for the enemy's movement, update
-            // the enemy's position and return true to end the some() iteration.
-            && (enemy_pos = n));
+            // the critter is only allowed to run away from the player. E.g. if
+            // the player is at NW, the critter will choose between S, SE, and
+            // E. Without the skewed threshold above this movement pattern makes
+            // the critter hard to catch: it runs away fast and doesn't stray.
+            && world[n] > world[critter]
+            // If the tile is a good candidate for the critter's movement,
+            // update the critter's position and return true to end the some()
+            // iteration.
+            && (critter = n));
 
         // Move the player one tile along the traced path.
-        if (enemy_pos == (player_pos = next)) {
-            // Defeat the dragon!
-            // Clear the screen and draw the checkmark. enemy_pos is set to
+        if (critter == (player = next)) {
+            // Defeat the critter!
+            // Clear the screen and draw the checkmark. `critter` is set to
             // undefined and acts as a flag to stop rendering.
-            enemy_pos = c.fillRect(0, 0, 640, 480);
-            viewport(player_pos, 0x168164160020);
+            critter = c.fillRect(0, 0, 640, 480);
+            viewport(player, 0x168164160020);
         }
     }
 };
@@ -224,7 +225,7 @@ a.onclick = (e,
         x = e.x - e.target.offsetLeft,
         y = e.y - e.target.offsetTop) => (
     // Handle viewport clicks
-    x < 480 && enemy_pos && plan(
+    x < 480 && critter && plan(
         // Transform x, y into an index into the world array.
         0|(x/8 + offset_x - 500) / 4
         + 30 * (0|(y/8 + offset_y - 20) / 4)),
