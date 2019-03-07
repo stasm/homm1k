@@ -64,9 +64,13 @@ draw = (sprite, x, y) => {
     }
 },
 
+// Draw a sprite on the minimap.
 minimap = (i, sprite) =>
     draw(sprite, i % 30 * 4 + 500, (0|i / 30) * 4 + 20),
 
+// Draw a sprite in the main viewport. This only happens for the path indicators
+// and the victory checkmark. The canvas needs to be scaled up and rotated. This
+// makes the X look like an x :)
 viewport = (i, sprite) => {
     // Approximate scale(8, 8) and rotate(Math.PI / 4).
     c.setTransform(6, 6, -6, 6,
@@ -79,6 +83,8 @@ viewport = (i, sprite) => {
 
 // PATH-FINDING
 
+// For a given tile of the world array, return the 8 tiles neighboring with it
+// on the map. Note: this makes the map wrap around horizontally.
 neighbors = i => [
     // Cardinal directions: N W S E
     i - 30, i - 1, i + 30, i + 1,
@@ -86,15 +92,32 @@ neighbors = i => [
     i - 31, i + 29, i + 31, i - 29,
 ],
 
+// For a given tile, inspect its neighbors and increment their distance scores
+// if they haven't been inspected yet. Non-passable terrain is represented as a
+// non-numeric value which also fails the < check. If the computed distance
+// score of the neighbor is lower than the preivous one, assign it and
+// recursively call distance on the neighbor's neighbors.
 distance = i => neighbors(i).map(n =>
     world[i] + 1 < world[n] &&
         (world[n] = world[i] + 1, distance(n))),
 
+// Trace the path connecting the player and the target. The tracing starts at
+// the target and follows the descending gradient of distance scores stored in
+// the world array. For each tile on the path, its neighbors are considered and
+// the first neighbor with a lower distance score is recurred into. The
+// recursive loop ends when the first neighbor with the score of 0 is found,
+// i.e. the path has reached a tile immediately next to the player. Note that
+// this function also updates the `next` global every time it's called, which is
+// used in the render loop to move the player. Path tracing starts at the target
+// and proceeds towards the player which means that the last time `next` is
+// updated it will hold the index of the tile which is the closest to the player
+// and on the path to the target.
 trace = i => (next = i, neighbors(i).some(n =>
          world[n] == 0 || world[n] < world[i] &&
              (viewport(n, 0x8018000), // The dot
              trace(n)))),
 
+// Plan the player's movement in response to a click.
 plan = i => {
     // If the tile is reachable...
     if (world[i] > 0 && world[i] < Infinity) {
@@ -151,10 +174,10 @@ render = (i = 900, v) => {
     minimap(enemy_pos, 0x208048088489); // gargoyle
     minimap(player_pos, 0x1c70711d8ff2); // player
 
-    // Viewport
+    // Draw the main viewport by copying and scaling the minimap up.
     c.drawImage(a, offset_x, offset_y, 60, 60, 0, 0, 480, 480);
 
-    // Minimap visible area border
+    // Draw the white border around the visible area on the minimap.
     c.strokeStyle = palette[7];
     c.strokeRect(offset_x, offset_y, 60, 60);
 
@@ -172,15 +195,15 @@ render = (i = 900, v) => {
             // Shuffle the neighboring tiles by mixing the timestamp (a
             // pseudo-random component) in and testing sin() against a
             // threshold. The threshold is set to reject more tiles than it
-            // accepts, which makes the enemy skip some moves. This mitigates
-            // the consequence of the > check on the next line, which makes the
-            // enemy flee in a direction strictly away from the player, thus
-            // making it hard to cath up with it.
+            // accepts, which makes the enemy skip some moves in order to mitigate
+            // the consequence of the > check on the next line.
             Math.sin(n * Date.now()) > .3
             // We use the > check rather than >= to avoid the enemy swapping
             // places with the player when they're next to each other. With >,
             // the enemy is only allowed to run away from the player. E.g. if
             // the player is at NW, the enemy will choose between S, SE, and E.
+            // Without the skewed threshold above this movement pattern makes
+            // the enemy hard to catch: it runs away fast and doesn't stray.
             && world[n] > world[enemy_pos]
             // If the tile is a good candidate for the enemy's movement, update
             // the enemy's position and return true to end the some() iteration.
