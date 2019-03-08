@@ -88,39 +88,44 @@ viewport = (i, sprite) => {
 
 // PATH-FINDING
 
+cardinal = i => [
+    // Cardinal directions: N W S E
+    i - 30, i - 1, i + 30, i + 1,
+],
+
 // For a given tile of the world array, return the 8 tiles neighboring with it
 // on the map. Note: this makes the map wrap around horizontally.
 neighbors = i => [
-    // Cardinal directions: N W S E
-    i - 30, i - 1, i + 30, i + 1,
+    ...cardinal(i),
     // Diagonal directions: NW SW SE NE
     i - 31, i + 29, i + 31, i - 29,
 ],
 
-// For a given tile, inspect its neighbors and increment their distance scores
-// if they haven't been inspected yet. Non-passable terrain is represented as a
-// non-numeric value which also fails the < check. If the computed distance
-// score of the neighbor is lower than the previous one, assign it and
-// recursively call distance on the neighbor's neighbors.
-distance = i => neighbors(i).map(n =>
+// For a given tile, inspect its NWSE neighbors and increment their distance
+// scores if they haven't been inspected yet. Non-passable terrain is
+// represented as a non-numeric value which also fails the < check. If the
+// computed distance score of the neighbor is lower than the previous one,
+// assign it and recursively call distance on the neighbor's neighbors.
+distance = i => cardinal(i).map(n =>
     world[i] + 1 < world[n]
     && (world[n] = world[i] + 1, distance(n))),
 
 // Trace the path connecting the player and the target. The tracing starts at
 // the target and follows the descending gradient of distance scores stored in
 // the world array. For each tile on the path, its neighbors are considered and
-// the first neighbor with a lower distance score is recurred into. The
-// recursive loop ends when the first neighbor with the score of 0 is found,
-// i.e. the path has reached a tile immediately next to the player. Note that
-// this function also updates the `next` global every time it's called, which is
-// used in the game loop to move the player. Path tracing starts at the target
-// and proceeds towards the player which means that the last time `next` is
-// updated it will hold the index of the tile which is the closest to the player
-// and on the path to the target.
-trace = i => neighbors(next = i).some(n =>
-     world[n] == 0 || world[n] < world[i]
-     && (viewport(n, 00000001000300000), // The dot
-         trace(n))),
+// the neighbor with a lower distance score is selected. Note that this function
+// also updates the `next` global every time it's called, which is used in the
+// game loop to move the player. Path tracing starts at the target and proceeds
+// towards the player which means that the last time `next` is updated it will
+// hold the index of the tile which is the closest to the player and on the path
+// to the target.
+trace = i => {
+    while (i != player) {
+        viewport(next = i, 00000001000300000); // The dot
+        i = neighbors(i).reduce((acc, cur) =>
+            world[cur] < world[acc] ? cur : acc, i);
+    }
+}
 
 // Plan the player's movement in response to a click.
 plan = i => {
