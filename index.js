@@ -14,7 +14,7 @@ var palette = [
 player = 335,
 critter = 373,
 
-// The offset of the currently viisble area of the minimap, in canvas pixels
+// The offset of the currently visible area of the minimap, in canvas pixels
 // from the origin. This makes it easy to update it when scrolling the view, to
 // draw the white border on the minimap, and to draw the zoomed in viewport.
 offset_x = 508,
@@ -100,7 +100,7 @@ neighbors = i => [
 // For a given tile, inspect its neighbors and increment their distance scores
 // if they haven't been inspected yet. Non-passable terrain is represented as a
 // non-numeric value which also fails the < check. If the computed distance
-// score of the neighbor is lower than the preivous one, assign it and
+// score of the neighbor is lower than the previous one, assign it and
 // recursively call distance on the neighbor's neighbors.
 distance = i => neighbors(i).map(n =>
     world[i] + 1 < world[n]
