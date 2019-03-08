@@ -112,10 +112,10 @@ distance = i => neighbors(i).map(n =>
 // and proceeds towards the player which means that the last time `next` is
 // updated it will hold the index of the tile which is the closest to the player
 // and on the path to the target.
-trace = i => (next = i, neighbors(i).some(n =>
+trace = i => neighbors(next = i).some(n =>
      world[n] == 0 || world[n] < world[i]
      && (viewport(n, 0x8018000), // The dot
-         trace(n)))),
+         trace(n))),
 
 // Plan the player's movement in response to a click.
 plan = i => {
