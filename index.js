@@ -108,7 +108,7 @@ distance = i => neighbors(i).map(n =>
 // recursive loop ends when the first neighbor with the score of 0 is found,
 // i.e. the path has reached a tile immediately next to the player. Note that
 // this function also updates the `next` global every time it's called, which is
-// used in the render loop to move the player. Path tracing starts at the target
+// used in the game loop to move the player. Path tracing starts at the target
 // and proceeds towards the player which means that the last time `next` is
 // updated it will hold the index of the tile which is the closest to the player
 // and on the path to the target.
@@ -131,10 +131,7 @@ plan = i => {
 
 // GAME LOOP
 
-// Render the game only while the critter is roaming.
-tick = _ => critter && render(),
-
-render = (i = 900, v) => {
+tick = (v, i = 900) => {
     // Draw the red background.
     // Also set the line width for the minimap visible area
     c.fillStyle = palette[c.lineWidth = 2];
@@ -216,11 +213,14 @@ render = (i = 900, v) => {
         if (critter == (player = next)) {
             // Defeat the critter!
             // Clear the screen and draw the checkmark. `critter` is set to
-            // undefined and acts as a flag to stop rendering.
+            // undefined and acts as a flag to stop the game loop.
             critter = c.fillRect(0, 0, 640, 480);
             viewport(player, 00550054405400040); // The checkmark
         }
     }
+
+    // Schedule the next tick only while the critter is roaming.
+    critter && setTimeout(tick);
 };
 
 a.onclick = (e,
@@ -243,4 +243,4 @@ c.imageSmoothingEnabled = false;
 b.bgColor = palette[3];
 
 // Start the game loop.
-setInterval(tick, 200);
+tick();
