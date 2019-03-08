@@ -131,7 +131,7 @@ plan = i => {
 
 // GAME LOOP
 
-// Render the game only while the dragon is roaming.
+// Render the game only while the critter is roaming.
 tick = _ => critter && render(),
 
 render = (i = 900, v) => {
@@ -190,7 +190,7 @@ render = (i = 900, v) => {
         // Re-draw the path to the target.
         plan(target);
 
-        // Move the dragon one tile away from the player, if possible.
+        // Move the critter one tile away from the player, if possible.
         neighbors(critter).some(n =>
             // Shuffle the neighboring tiles by mixing the timestamp (a
             // pseudo-random component) in and testing sin() against a
