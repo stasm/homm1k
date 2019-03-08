@@ -20,8 +20,10 @@ critter = 373,
 offset_x = 508,
 offset_y = 28,
 
-// Whether the player is currently moving in response to a double click.
-moving = false,
+// moving: Whether the player is currently moving in response to a double click.
+// imageSmoothingEnabled: The visible minimap fragment is drawn into the main
+// viewport scaled up via drawImage(). Preserve the sharpness of pixels.
+moving = c.imageSmoothingEnabled = false,
 
 // The world array index of the most recently clicked tile.
 target = -1,
@@ -249,9 +251,6 @@ a.onclick = (e,
     }
 };
 
-// The visible minimap fragment is drawn into the main viewport scaled up via
-// drawImage(). Preserve the sharpness of pixels.
-c.imageSmoothingEnabled = false;
 b.bgColor = palette[3];
 
 // Start the game loop.
