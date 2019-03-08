@@ -229,6 +229,10 @@ tick = (v, i = 900) => {
                 critter = c.fillRect(0, 0, 640, 480);
                 viewport(player, 00550054405400040); // The checkmark
             }
+
+            // NOMOREBYTES Scroll the viewport together with the player.
+            // offset_x = player % 30 * 4 + 500 - 30;
+            // offset_y = (0|player / 30) * 4 + 20 - 30;
         }
     }
 
