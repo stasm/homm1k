@@ -114,7 +114,7 @@ distance = i => neighbors(i).map(n =>
 // and on the path to the target.
 trace = i => neighbors(next = i).some(n =>
      world[n] == 0 || world[n] < world[i]
-     && (viewport(n, 0x8018000), // The dot
+     && (viewport(n, 00000001000300000), // The dot
          trace(n))),
 
 // Plan the player's movement in response to a click.
@@ -124,7 +124,7 @@ plan = i => {
         // Trace the path from it to the player.
         trace(target = i);
         // Draw the X mark.
-        viewport(i, 0x80590db018); // The X
+        viewport(i, 00010013103330030); // The X
     }
 },
 
@@ -151,10 +151,10 @@ render = (i = 900, v) => {
                 + Math.sin(timestamp % i) + 3;
 
         minimap(i,
-                v > 6 ? 0x249249649acd: // rock
-                v > 4 ? 0xa6d925b25b2d: // tree
+                v > 6 ? 01111111131115315: // rock
+                v > 4 ? 05155444554455455: // tree
                 v > 1 ? 5: // grass
-                v > 0 ? 0x92592db6db6d: // bush
+                v > 0 ? 04445445555555555: // bush
                 6 // water
         );
 
@@ -164,15 +164,16 @@ render = (i = 900, v) => {
         world[i] = 0 < v && v <= 4 ? Infinity : palette;
     }
 
-    // minimap(critter, 0x6180d81d8fda); // griffin
-    // minimap(critter, 0x40249088489); // black dragon
-    // minimap(critter, 0x80492050252); // red dragon
-    // minimap(critter, 0x249049040051); // snake
-    // minimap(critter, 0x208248088489); // dread knight
-    // minimap(critter, 0x4124904900a); // godzilla
-    // minimap(critter, 0x4824804900a); // t-rex
-    minimap(critter, 0x208048088489); // gargoyle
-    minimap(player, 0x1c70711d8ff2); // knight
+    // minimap(critter + 2, 03030033007307732); // griffin
+    // minimap(critter + 4, 00100111102102211); // black dragon with claws
+    // minimap(critter + 60, 00200222201201122); // red dragon with claws
+    // minimap(critter + 62, 01111011101000121); // snake
+    // minimap(critter + 64, 01010111002102211); // dread knight
+    // minimap(critter + 120, 00101111101110012); // godzilla
+    // minimap(critter + 122, 00110111001110012); // t-rex
+    // minimap(critter + 124, 01010011002102211); // young dragon
+    minimap(critter, 01111111002102211); // black dragon
+    minimap(player, 00707016107307762); // knight
 
     // Draw the main viewport by copying and scaling the minimap up.
     c.drawImage(a, offset_x, offset_y, 60, 60, 0, 0, 480, 480);
@@ -216,7 +217,7 @@ render = (i = 900, v) => {
             // Clear the screen and draw the checkmark. `critter` is set to
             // undefined and acts as a flag to stop rendering.
             critter = c.fillRect(0, 0, 640, 480);
-            viewport(player, 0x168164160020); // The checkmark
+            viewport(player, 00550054405400040); // The checkmark
         }
     }
 };
