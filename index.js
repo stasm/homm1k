@@ -188,8 +188,10 @@ tick = (v, i = 900) => {
     world[player] = 0;
     distance(player);
 
-    // Move the player if they haven't reached the target yet.
-    if (player ^ target) {
+    // Handle movement if the player if they haven't reached the target yet. The
+    // world[target] check is similar to player != target, but it also avoids
+    // drawing the path for the null target at the beginning of the game.
+    if (world[target]) {
         // Trace the path from the target to the player.
         trace(target);
         // Draw the X mark at the target.
