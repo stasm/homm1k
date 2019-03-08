@@ -227,8 +227,8 @@ a.onclick = (e,
     // Handle viewport clicks
     x < 480 && critter && plan(
         // Transform x, y into an index into the world array.
-        0|(x/8 + offset_x - 500) / 4
-        + 30 * (0|(y/8 + offset_y - 20) / 4)),
+        0|(x / 8 + offset_x - 500) / 4
+        + 30 * (0|(y / 8 + offset_y - 20) / 4)),
     // Handle minimap clicks
     500 < x && y < 140 && (
         // Adjust the offset of the visible minimap fragment.
