@@ -195,27 +195,29 @@ tick = (v, i = 900) => {
 
         if (moving) {
             // Move the critter one tile away from the player, if possible.
+            // The critter moves first to give it a chance to escape when the
+            // player is on an adjacent tile. If the critter has been just
+            // caught, neighbors(critter) returns an array of NaNs which is good
+            // enough for making this no-op.
             neighbors(critter).some(n =>
-                // Shuffle the neighboring tiles by mixing the timestamp (a
-                // pseudo-random component) in and testing sin() against a
-                // threshold. The threshold is set to reject more tiles than it
-                // accepts, which makes the critter skip some moves in order to
-                // mitigate the consequence of the > check on the next line.
-                Math.sin(n * Date.now()) > .3
-                // We use the > check rather than >= to avoid the critter
-                // swapping places with the player when they're next to each
-                // other. With >, the critter is only allowed to run away from
-                // the player. E.g. if the player is at NW, the critter will
-                // choose between S, SE, and E. Without the skewed threshold
-                // above this movement pattern makes the critter hard to catch:
-                // it runs away fast and doesn't stray.
+                // Filter the neighboring tiles by mixing the timestamp (a
+                // pseudo-random component) in to land somewhere far on the x
+                // axis and testing if sin() is above zero.
+                Math.sin(n * Date.now()) > 0
+                // We use the > check rather than >= to force the critter to run
+                // away from the player. E.g. if the player is at NW, the
+                // critter will choose between S, SE, and E.
                 && world[n] > world[critter]
                 // If the tile is a good candidate for the critter's movement,
                 // update the critter's position and return true to end the
                 // some() iteration.
-                && (critter = n));
+                && (critter = n)
+            );
 
-            // Move the player one tile along the traced path.
+            // Move the player one tile along the traced path and check the
+            // victory condition. This happens before the critter gets a chance
+            // to run away this turn to avoid the boring situation of chasing it
+            // when it's right next to the player.
             if (critter == (player = next)) {
                 // Defeat the critter! Clear the screen and draw the checkmark.
                 // `critter` is set to undefined and acts as a flag to stop the
