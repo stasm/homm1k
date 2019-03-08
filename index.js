@@ -20,6 +20,9 @@ critter = 373,
 offset_x = 508,
 offset_y = 28,
 
+// Whether the player is currently moving in response to a double click.
+moving = false,
+
 // The world array index of the most recently clicked tile.
 target = -1,
 
@@ -119,8 +122,10 @@ trace = i => neighbors(next = i).some(n =>
 
 // Plan the player's movement in response to a click.
 plan = i => {
+    // If this is the second click on the same tile, start moving towards it.
+    moving = i == target;
+    // If the tile is reachable set it as the current target.
     if (world[i] > 0 && world[i] < Infinity) {
-        // If the tile is reachable set it as the current target.
         target = i;
     }
 },
@@ -182,39 +187,42 @@ tick = (v, i = 900) => {
     distance(player);
 
     // Move the player if they haven't reached the target yet.
-    if (world[target]) {
+    if (player ^ target) {
         // Trace the path from the target to the player.
         trace(target);
         // Draw the X mark at the target.
         viewport(target, 00010013103330030); // The X
 
-        // Move the critter one tile away from the player, if possible.
-        neighbors(critter).some(n =>
-            // Shuffle the neighboring tiles by mixing the timestamp (a
-            // pseudo-random component) in and testing sin() against a
-            // threshold. The threshold is set to reject more tiles than it
-            // accepts, which makes the critter skip some moves in order to
-            // mitigate the consequence of the > check on the next line.
-            Math.sin(n * Date.now()) > .3
-            // We use the > check rather than >= to avoid the critter swapping
-            // places with the player when they're next to each other. With >,
-            // the critter is only allowed to run away from the player. E.g. if
-            // the player is at NW, the critter will choose between S, SE, and
-            // E. Without the skewed threshold above this movement pattern makes
-            // the critter hard to catch: it runs away fast and doesn't stray.
-            && world[n] > world[critter]
-            // If the tile is a good candidate for the critter's movement,
-            // update the critter's position and return true to end the some()
-            // iteration.
-            && (critter = n));
+        if (moving) {
+            // Move the critter one tile away from the player, if possible.
+            neighbors(critter).some(n =>
+                // Shuffle the neighboring tiles by mixing the timestamp (a
+                // pseudo-random component) in and testing sin() against a
+                // threshold. The threshold is set to reject more tiles than it
+                // accepts, which makes the critter skip some moves in order to
+                // mitigate the consequence of the > check on the next line.
+                Math.sin(n * Date.now()) > .3
+                // We use the > check rather than >= to avoid the critter
+                // swapping places with the player when they're next to each
+                // other. With >, the critter is only allowed to run away from
+                // the player. E.g. if the player is at NW, the critter will
+                // choose between S, SE, and E. Without the skewed threshold
+                // above this movement pattern makes the critter hard to catch:
+                // it runs away fast and doesn't stray.
+                && world[n] > world[critter]
+                // If the tile is a good candidate for the critter's movement,
+                // update the critter's position and return true to end the
+                // some() iteration.
+                && (critter = n));
 
-        // Move the player one tile along the traced path.
-        if (critter == (player = next)) {
-            // Defeat the critter!
-            // Clear the screen and draw the checkmark. `critter` is set to
-            // undefined and acts as a flag to stop the game loop.
-            critter = c.fillRect(0, 0, 640, 480);
-            viewport(player, 00550054405400040); // The checkmark
+            // Move the player one tile along the traced path.
+            if (critter == (player = next)) {
+                // Defeat the critter! Clear the screen and draw the checkmark.
+                // `critter` is set to undefined and acts as a flag to stop the
+                // game loop.
+                critter = c.fillRect(0, 0, 640, 480);
+                viewport(player, 00550054405400040); // The checkmark
+            }
         }
     }
 
