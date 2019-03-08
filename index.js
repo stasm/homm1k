@@ -103,12 +103,20 @@ neighbors = i => [
 
 // For a given tile, inspect its NWSE neighbors and increment their distance
 // scores if they haven't been inspected yet. Non-passable terrain is
-// represented as a non-numeric value which also fails the < check. If the
-// computed distance score of the neighbor is lower than the previous one,
-// assign it and recursively call distance on the neighbor's neighbors.
-distance = i => cardinal(i).map(n =>
-    world[i] + 1 < world[n]
-    && (world[n] = world[i] + 1, distance(n))),
+// represented as a non-numeric value which also fails the < check.
+// This is the classic Breadth First Search.
+distance = i => {
+    let frontier = [i];
+    while (frontier.length) {
+        let current = frontier.shift();
+        for (let n of cardinal(current)) {
+            if (world[current] + 1 < world[n]) {
+                world[n] = world[current] + 1;
+                frontier.push(n);
+            }
+        }
+    }
+};
 
 // Trace the path connecting the player and the target. The tracing starts at
 // the target and follows the descending gradient of distance scores stored in
