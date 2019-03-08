@@ -119,12 +119,9 @@ trace = i => neighbors(next = i).some(n =>
 
 // Plan the player's movement in response to a click.
 plan = i => {
-    // If the tile is reachable...
     if (world[i] > 0 && world[i] < Infinity) {
-        // Trace the path from it to the player.
-        trace(target = i);
-        // Draw the X mark.
-        viewport(i, 00010013103330030); // The X
+        // If the tile is reachable set it as the current target.
+        target = i;
     }
 },
 
@@ -186,8 +183,10 @@ tick = (v, i = 900) => {
 
     // Move the player if they haven't reached the target yet.
     if (world[target]) {
-        // Re-draw the path to the target.
-        plan(target);
+        // Trace the path from the target to the player.
+        trace(target);
+        // Draw the X mark at the target.
+        viewport(target, 00010013103330030); // The X
 
         // Move the critter one tile away from the player, if possible.
         neighbors(critter).some(n =>
@@ -227,7 +226,7 @@ a.onclick = (e,
         x = e.x - e.target.offsetLeft,
         y = e.y - e.target.offsetTop) => (
     // Handle viewport clicks
-    x < 480 && critter && plan(
+    x < 480 && plan(
         // Transform x, y into an index into the world array.
         0|(x / 8 + offset_x - 500) / 4
         + 30 * (0|(y / 8 + offset_y - 20) / 4)),
