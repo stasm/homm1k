@@ -172,6 +172,7 @@ render = (i = 900, v) => {
     // minimap(critter + 120, 00101111101110012); // godzilla
     // minimap(critter + 122, 00110111001110012); // t-rex
     // minimap(critter + 124, 01010011002102211); // young dragon
+    // minimap(critter + 180, 03333333007307732); // sphinx
     minimap(critter, 01111111002102211); // black dragon
     minimap(player, 00707016107307762); // knight
 
