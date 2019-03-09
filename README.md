@@ -3,6 +3,8 @@
 _HoMM 1K_ is a homage to _Heroes of Might and Magic 3_ and a submission for
 JS1K 2019. Play it online at https://piesku.com/homm1k.
 
+![](screenshot.png)
+
 ## Motivation
 
 The theme of this year's JS1K is _X_, to celebrate its tenth anniversary. The
