@@ -193,6 +193,7 @@ tick = (v, i = 900) => {
     // Populate the world array with distances of each tile to the player.
     world[player] = 0;
     distance(player);
+    // DEBUG_distances();
 
     // Handle movement if the player if they haven't reached the target yet. The
     // world[target] check is similar to player != target, but it also avoids
