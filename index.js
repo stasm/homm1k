@@ -39,8 +39,8 @@ next = -1,
 // tiles.
 world = [],
 
-// Seed for noise used in terrain generation.
-timestamp = Date.now(),
+// The seed for the terrain generation.
+seed = Date.now(),
 
 
 // DRAWING
@@ -147,9 +147,9 @@ tick = (v, i = 900) => {
 
     // Draw the minimap.
     while (i--) {
-        // Generate the terrain seeded by the timestamp of when the script ran.
+        // Generate the terrain adding a bit of high-frequency noise.
         v = 5 * Math.sin((i % 30 - 17) * (i - 300) / 3e3)
-                + Math.sin(timestamp % i) + 3;
+                + Math.sin(seed % i) + 3;
 
         minimap(i,
                 v > 6 ? 01111111131115315: // rock
