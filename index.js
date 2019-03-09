@@ -215,6 +215,7 @@ tick = (v, i = 900) => {
                 // pseudo-random component) in to land somewhere far on the x
                 // axis and testing if sin() is above zero.
                 Math.sin(n * Date.now()) > 0
+                // && DEBUG_critter(n)
                 // We use the > check rather than >= to force the critter to run
                 // away from the player. E.g. if the player is at NW, the
                 // critter will choose between S, SE, and E.
