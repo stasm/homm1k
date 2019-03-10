@@ -7,18 +7,21 @@ function tile_to_screen(i) {
 
 function DEBUG_distances() {
     for (let [i, score] of world.entries()) {
-        if (score <= 15) {
-            let {x, y} = tile_to_screen(i);
-            if (x >= 480) continue;
+        if (isNaN(score) || score === 0 || score > 15)
+            continue
 
-            let prev_fill_style = c.fillStyle;
-            c.fillStyle = `rgba(128, 128, 0, ${0.5 - score / 30}`;
-            c.fillRect(x, y, 24, 24);
-            c.fillStyle = `rgba(255, 255, 255, ${0.5 - score / 30}`;
-            c.font = "16px monospace";
-            c.fillText(score, x + 2, y + 16);
-            c.fillStyle = prev_fill_style;
-        }
+        let {x, y} = tile_to_screen(i);
+        if (x >= 480)
+            continue;
+
+        let prev_fill_style = c.fillStyle;
+        c.fillStyle = `hsla(
+                ${score * 255 / 15}, 100%, 50%, ${0.33 - score / 45}`;
+        c.fillRect(x, y, 24, 24);
+        c.fillStyle = `rgba(255, 255, 255, ${0.5 - score / 30}`;
+        c.font = "16px monospace";
+        c.fillText(score, x + 2, y + 16);
+        c.fillStyle = prev_fill_style;
     }
 }
 
