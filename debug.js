@@ -5,7 +5,7 @@ function tile_to_screen(i) {
     };
 }
 
-function DEBUG_distances() {
+function DEBUG_distance_scores() {
     for (let [i, score] of world.entries()) {
         if (isNaN(score) || score === 0 || score > 15)
             continue
@@ -25,11 +25,13 @@ function DEBUG_distances() {
     }
 }
 
-function DEBUG_critter(i) {
+function DEBUG_critter_deciding(i, {final}) {
     let {x, y} = tile_to_screen(i);
     if (x < 480) {
         let prev_fill_style = c.fillStyle;
-        c.fillStyle = `rgba(0, 128, 255, 0.5)`;
+        c.fillStyle = final ?
+                `hsla(128, 100%, 50%, 0.5)`:
+                `hsla(200, 100%, 50%, 0.5)`;
         c.fillRect(x, y, 24, 24);
         c.fillStyle = prev_fill_style;
     }

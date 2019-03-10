@@ -193,7 +193,7 @@ tick = (v, i = 900) => {
     // Populate the world array with distances of each tile to the player.
     world[player] = 0;
     distance(player);
-    // DEBUG_distances();
+    // DEBUG_distance_scores();
 
     // Handle movement if the player if they haven't reached the target yet. The
     // world[target] check is similar to player != target, but it also avoids
@@ -215,11 +215,12 @@ tick = (v, i = 900) => {
                 // pseudo-random component) in to land somewhere far on the x
                 // axis and testing if sin() is above zero.
                 Math.sin(n * Date.now()) > 0
-                // && DEBUG_critter(n)
+                // && DEBUG_critter_deciding(n, {final: false})
                 // We use the > check rather than >= to force the critter to run
                 // away from the player. E.g. if the player is at NW, the
                 // critter will choose between S, SE, and E.
                 && world[n] > world[critter]
+                // && DEBUG_critter_deciding(n, {final: true})
                 // If the tile is a good candidate for the critter's movement,
                 // update the critter's position and return true to end the
                 // some() iteration.
