@@ -237,10 +237,11 @@ tick = (v, cell = 900) => {
             // when it's right next to the player.
             if (critter == (player = next)) {
                 // Defeat the critter! Clear the screen and draw the checkmark.
-                // `critter` is set to undefined and acts as a flag to stop the
-                // game loop.
-                critter = c.fillRect(0, 0, 640, 480);
+                c.fillRect(0, 0, 640, 480);
                 viewport(player, 00550054405400040); // The checkmark
+            } else {
+                // Schedule the next tick only if the critter is roaming free.
+                setTimeout(tick, 100);
             }
 
             // NOMOREBYTES Scroll the viewport together with the player.
@@ -248,9 +249,6 @@ tick = (v, cell = 900) => {
             // offset_y = (0|player / 30) * 4 + 20 - 30;
         }
     }
-
-    // Schedule the next tick only while the critter is roaming.
-    critter && setTimeout(tick);
 };
 
 a.onclick = (e,
@@ -267,6 +265,11 @@ a.onclick = (e,
         // fragment.
         offset_x = x - 30;
         offset_y = y - 30;
+    }
+
+    // Update the game state and render it.
+    if (critter ^ player) {
+        tick();
     }
 };
 
