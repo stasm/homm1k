@@ -39,6 +39,9 @@ The list of fetures includes:
 
 ## Running locally
 
-Refer to `index.js` for the documented source code of the game. To play, open `index.html` in the browser. Uncomment the `DEBUG_*` functions to see details of the path-finding algorithm and the dragon's AI. 
+Refer to `index.js` for the documented source code of the game. To play, open
+`index.html` in the browser. Set the `DEBUG` global in `index.js` to `true` to
+see details of the path-finding algorithm and the dragon's AI.
 
-To build the optimized version of the source code, install the dependencies with `npm install` and run `make`.
+To build the optimized version of the source code, install the dependencies
+with `npm install` and run `make`.

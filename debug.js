@@ -6,9 +6,12 @@ function tile_to_screen(i) {
 }
 
 function DEBUG_distance_scores() {
+    if (!DEBUG)
+        return true;
+
     for (let [i, score] of world.entries()) {
         if (isNaN(score) || score === 0 || score > 15)
-            continue
+            continue;
 
         let {x, y} = tile_to_screen(i);
         if (x >= 480)
@@ -23,9 +26,14 @@ function DEBUG_distance_scores() {
         c.fillText(score, x + 2, y + 16);
         c.fillStyle = prev_fill_style;
     }
+
+    return true;
 }
 
 function DEBUG_critter_deciding(i, {final}) {
+    if (!DEBUG)
+        return true;
+
     let {x, y} = tile_to_screen(i);
     if (x < 480) {
         let prev_fill_style = c.fillStyle;
