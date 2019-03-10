@@ -18,9 +18,11 @@ function DEBUG_distance_scores() {
             continue;
 
         let prev_fill_style = c.fillStyle;
-        c.fillStyle = `hsla(
-                ${score * 255 / 15}, 100%, 50%, ${0.33 - score / 45}`;
-        c.fillRect(x, y, 24, 24);
+        if (cell != critter) {
+            c.fillStyle = `hsla(
+                    ${score * 255 / 15}, 100%, 50%, ${0.33 - score / 45}`;
+            c.fillRect(x, y, 24, 24);
+        }
         c.fillStyle = `rgba(255, 255, 255, ${0.5 - score / 30}`;
         c.font = "16px monospace";
         c.fillText(score, x + 2, y + 16);
