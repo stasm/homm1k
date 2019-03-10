@@ -1,7 +1,7 @@
-function tile_to_screen(i) {
+function cell_to_screen(cell) {
     return {
-        x: (i % 30 * 4 + 500 - offset_x) * 8,
-        y: ((0|i / 30) * 4 + 20 - offset_y) * 8,
+        x: (cell % 30 * 4 + 500 - offset_x) * 8,
+        y: ((0|cell / 30) * 4 + 20 - offset_y) * 8,
     };
 }
 
@@ -9,11 +9,11 @@ function DEBUG_distance_scores() {
     if (!DEBUG)
         return true;
 
-    for (let [i, score] of world.entries()) {
+    for (let [cell, score] of world.entries()) {
         if (isNaN(score) || score === 0 || score > 15)
             continue;
 
-        let {x, y} = tile_to_screen(i);
+        let {x, y} = cell_to_screen(cell);
         if (x >= 480)
             continue;
 
@@ -30,11 +30,11 @@ function DEBUG_distance_scores() {
     return true;
 }
 
-function DEBUG_critter_deciding(i, {final}) {
+function DEBUG_critter_deciding(cell, {final}) {
     if (!DEBUG)
         return true;
 
-    let {x, y} = tile_to_screen(i);
+    let {x, y} = cell_to_screen(cell);
     if (x < 480) {
         let prev_fill_style = c.fillStyle;
         c.fillStyle = final ?

@@ -73,18 +73,18 @@ draw = (sprite, x, y) => {
 },
 
 // Draw a sprite on the minimap.
-minimap = (i, sprite) =>
-    draw(sprite, i % 30 * 4 + 500, (0|i / 30) * 4 + 20),
+minimap = (cell, sprite) =>
+    draw(sprite, cell % 30 * 4 + 500, (0|cell / 30) * 4 + 20),
 
 // Draw a sprite in the main viewport. This only happens for the path indicators
 // and the victory checkmark. The canvas needs to be scaled up and rotated. This
 // makes the X look like an x :)
-viewport = (i, sprite) => {
+viewport = (cell, sprite) => {
     // Approximate scale(8, 8) and rotate(Math.PI / 4).
     c.setTransform(
             6, 6, -6, 6,
-            (i % 30 * 4 + 502 - offset_x) * 8,
-            ((0|i / 30) * 4 + 20 - offset_y) * 8);
+            (cell % 30 * 4 + 502 - offset_x) * 8,
+            ((0|cell / 30) * 4 + 20 - offset_y) * 8);
     draw(sprite, 0, 0);
     c.resetTransform();
 },
@@ -94,11 +94,11 @@ viewport = (i, sprite) => {
 
 // For a given tile of the world array, return the 8 tiles neighboring with it
 // on the map. Note: this makes the map wrap around horizontally.
-neighbors = i => [
+neighbors = cell => [
     // Cardinal directions: N W S E
-    i - 30, i - 1, i + 30, i + 1,
+    cell - 30, cell - 1, cell + 30, cell + 1,
     // Diagonal directions: NW SW SE NE
-    i - 31, i + 29, i + 31, i - 29,
+    cell - 31, cell + 29, cell + 31, cell - 29,
 ],
 
 // For a given tile, inspect its neighbors and increment their distance scores
@@ -106,9 +106,9 @@ neighbors = i => [
 // non-numeric value which also fails the > check. If the computed distance
 // score of the neighbor is lower than the previous one, assign it and
 // recursively call distance on the neighbor's neighbors.
-distance = i => neighbors(i).map(n => {
-    if (world[n] > world[i] + 1) {
-        world[n] = world[i] + 1;
+distance = cell => neighbors(cell).map(n => {
+    if (world[n] > world[cell] + 1) {
+        world[n] = world[cell] + 1;
         distance(n);
     }
 }),
@@ -121,31 +121,31 @@ distance = i => neighbors(i).map(n => {
 // player. The while loop makes sure that `next` is never set to the current
 // position of the player. The last time `next` is updated it holds the index of
 // the tile which is the closest to the player and on the path to the target.
-trace = i => {
-    while (i != player) {
-        viewport(next = i, 00000001000300000); // The dot
-        neighbors(i).map(n => {
-            if (world[n] < world[i]) {
-                i = n;
+trace = cell => {
+    while (cell != player) {
+        viewport(next = cell, 00000001000300000); // The dot
+        neighbors(cell).map(n => {
+            if (world[n] < world[cell]) {
+                cell = n;
             }
         });
     }
 },
 
 // Plan the player's movement in response to a click.
-plan = i => {
+plan = cell => {
     // If this is the second click on the same tile, start moving towards it.
-    moving = i == target;
+    moving = cell == target;
     // If the tile is reachable set it as the current target.
-    if (world[i] > 0 && world[i] < Infinity) {
-        target = i;
+    if (world[cell] > 0 && world[cell] < Infinity) {
+        target = cell;
     }
 },
 
 
 // GAME LOOP
 
-tick = (v, i = 900) => {
+tick = (v, cell = 900) => {
     // Draw the red background.
     // Also set the line width for the minimap visible area
     c.fillStyle = palette[c.lineWidth = 2];
@@ -156,12 +156,12 @@ tick = (v, i = 900) => {
     c.fillRect(490, 10, 140, 140);
 
     // Draw the minimap.
-    while (i--) {
+    while (cell--) {
         // Generate the terrain adding a bit of high-frequency noise.
-        v = 5 * Math.sin((i % 30 - 17) * (i - 300) / 3e3)
-                + Math.sin(seed % i) + 3;
+        v = 5 * Math.sin((cell % 30 - 17) * (cell - 300) / 3e3)
+                + Math.sin(seed % cell) + 3;
 
-        minimap(i,
+        minimap(cell,
                 v > 6 ? 01111111131115315: // rock
                 v > 4 ? 05155444554455455: // tree
                 v > 1 ? 5: // grass
@@ -172,7 +172,7 @@ tick = (v, i = 900) => {
         // palette here is used as a non-numerical value (also when coerced)
         // which doesn't compare as less than nor greater than a number when
         // compared in distance(). It represents non-passable terrain.
-        world[i] = 0 < v && v <= 4 ? Infinity : palette;
+        world[cell] = 0 < v && v <= 4 ? Infinity : palette;
     }
 
     // minimap(critter + 2, 03030033007307732); // griffin
