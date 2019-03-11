@@ -232,12 +232,10 @@ tick = (v, cell = 900) => {
             );
 
             // Move the player one tile along the traced path and check the
-            // victory condition. This happens before the critter gets a chance
-            // to run away this turn to avoid the boring situation of chasing it
-            // when it's right next to the player.
+            // victory condition.
             if (critter == (player = next)) {
-                // Defeat the critter! Clear the screen and draw the checkmark.
-                c.fillRect(0, 0, 640, 480);
+                // Clear the screen and draw the checkmark. Remove the handler.
+                a.onclick = c.fillRect(0, 0, 640, 480);
                 viewport(player, 00550054405400040); // The checkmark
             } else {
                 // Schedule the next tick only if the critter is roaming free.
@@ -267,10 +265,8 @@ a.onclick = (e,
         offset_y = y - 30;
     }
 
-    // Update the game state and render it.
-    if (critter ^ player) {
-        tick();
-    }
+    // Update the game state in response to the click and render it.
+    tick();
 };
 
 b.bgColor = palette[3];
