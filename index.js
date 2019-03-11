@@ -239,7 +239,7 @@ tick = (v, cell = 900) => {
                 viewport(player, 00550054405400040); // The checkmark
             } else {
                 // Schedule the next tick only if the critter is roaming free.
-                setTimeout(tick, 100);
+                setTimeout(tick);
             }
 
             // NOMOREBYTES Scroll the viewport together with the player.
