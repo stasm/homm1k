@@ -95,10 +95,14 @@ viewport = (cell, sprite) => {
 // For a given tile of the world array, return the 8 tiles neighboring with it
 // on the map. Note: this makes the map wrap around horizontally.
 neighbors = cell => [
-    // Cardinal directions: N W S E
-    cell - 30, cell - 1, cell + 30, cell + 1,
-    // Diagonal directions: NW SW SE NE
-    cell - 31, cell + 29, cell + 31, cell - 29,
+    cell - 30, // N
+    cell - 31, // NW
+    cell - 1, // W
+    cell + 29, // SW
+    cell + 30, // S
+    cell + 31, // SE
+    cell + 1, // E
+    cell - 29, // NE
 ],
 
 // For a given tile, inspect its neighbors and increment their distance scores
@@ -106,9 +110,9 @@ neighbors = cell => [
 // non-numeric value which also fails the > check. If the computed distance
 // score of the neighbor is lower than the previous one, assign it and
 // recursively call distance on the neighbor's neighbors.
-distance = cell => neighbors(cell).map(n => {
-    if (world[n] > world[cell] + 1) {
-        world[n] = world[cell] + 1;
+distance = cell => neighbors(cell).map((n, i) => {
+    if (world[n] > world[cell] + 1 + i % 2) {
+        world[n] = world[cell] + 1 + i % 2;
         distance(n);
     }
 }),
@@ -124,7 +128,7 @@ distance = cell => neighbors(cell).map(n => {
 trace = cell => {
     while (cell != player) {
         viewport(next = cell, 00000001000300000); // The dot
-        neighbors(cell).map(n => {
+        neighbors(cell).map((n, i) => {
             if (world[n] < world[cell]) {
                 cell = n;
             }
