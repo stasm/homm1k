@@ -219,7 +219,8 @@ tick = (v, cell = 900) => {
                 // We use the > check rather than >= to force the critter to run
                 // away from the player. E.g. if the player is at NW, the
                 // critter will choose between S, SE, and E.
-                && world[n] > world[critter]
+                && world[n] >= world[critter]
+                && world[n] > 1
                 && DEBUG_critter_deciding(n, {final: true})
                 // If the tile is a good candidate for the critter's movement,
                 // update the critter's position and return true to end the
