@@ -203,8 +203,8 @@ tick = (v, cell = 900) => {
             // Move the critter one tile away from the player, if possible.
             // The critter moves first to give it a chance to escape when the
             // player is on an adjacent tile. If the critter has been just
-            // caught, neighbors(critter) returns an array of NaNs which is good
-            // enough for making this no-op.
+            // caught, critter is undefined and neighbors(critter) returns an
+            // array of NaNs which is good enough for making this no-op.
             neighbors(critter).some(n =>
                 // Filter the neighboring tiles by mixing the timestamp (a
                 // pseudo-random component) in to land somewhere far on the x
@@ -225,8 +225,9 @@ tick = (v, cell = 900) => {
             // Move the player one tile along the traced path and check the
             // victory condition.
             if (critter == (player = next)) {
-                // Clear the screen and draw the checkmark. Remove the handler.
-                a.onclick = c.fillRect(0, 0, 640, 480);
+                // Clear the screen and draw the checkmark. critter is set to
+                // undefined and acts as a flag disabling the onclick handler.
+                critter = c.fillRect(0, 0, 640, 480);
                 viewport(player, 00550054405400040); // The checkmark
             } else {
                 // Schedule the next tick only if the critter is roaming free.
@@ -256,8 +257,11 @@ a.onclick = (e,
         offset_y = y - 30;
     }
 
-    // Update the game state in response to the click and render it.
-    tick();
+    // If the critter hasn't been caught yet, update the game state in response
+    // to the click and render it.
+    if (critter) {
+        tick();
+    }
 };
 
 b.bgColor = palette[3];
