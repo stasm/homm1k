@@ -175,15 +175,6 @@ tick = (v, cell = 900) => {
         world[cell] = 0 < v && v <= 4 ? Infinity : palette;
     }
 
-    // minimap(critter + 2, 03030033007307732); // griffin
-    // minimap(critter + 4, 00100111102102211); // black dragon with claws
-    // minimap(critter + 60, 00200222201201122); // red dragon with claws
-    // minimap(critter + 62, 01111011101000121); // snake
-    // minimap(critter + 64, 01010111002102211); // dread knight
-    // minimap(critter + 120, 00101111101110012); // godzilla
-    // minimap(critter + 122, 00110111001110012); // t-rex
-    // minimap(critter + 124, 01010011002102211); // young dragon
-    // minimap(critter + 180, 03333333007307732); // sphinx
     minimap(critter, 01111111002102211); // black dragon
     minimap(player, 00707016107307762); // knight
 
