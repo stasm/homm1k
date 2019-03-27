@@ -15,8 +15,8 @@ var palette = [
 
 // The position of the player and the critter expressed as an index into the
 // 30x30 world array.
-player = 335,
-critter = 373,
+player = 337,
+critter = 342,
 
 // The offset of the currently visible area of the minimap, in canvas pixels
 // from the origin. This makes it easy to update it when scrolling the view, to
@@ -219,8 +219,7 @@ tick = (v, cell = 900) => {
                 // We use the > check rather than >= to force the critter to run
                 // away from the player. E.g. if the player is at NW, the
                 // critter will choose between S, SE, and E.
-                && world[n] >= world[critter]
-                && world[n] > 1
+                && world[n] > world[critter]
                 && DEBUG_critter_deciding(n, {final: true})
                 // If the tile is a good candidate for the critter's movement,
                 // update the critter's position and return true to end the
