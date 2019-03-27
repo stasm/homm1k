@@ -212,9 +212,10 @@ tick = (v, cell = 900) => {
             // array of NaNs which is good enough for making this no-op.
             neighbors(critter).some(n =>
                 // Filter the neighboring tiles by mixing in the seed (a
-                // pseudo-random component) to land somewhere far on the
-                // x axis and testing if sin() is above zero.
-                Math.sin(n * seed) > 0
+                // pseudo-random component) and the player's next position to
+                // land somewhere far on the x axis and testing if sin() is
+                // above zero. This has a similar effect as a random sort.
+                Math.sin(n * next * seed) > 0
                 && DEBUG_critter_deciding(n, {final: false})
                 // We use the > check rather than >= to force the critter to run
                 // away from the player. E.g. if the player is at NW, the
