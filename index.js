@@ -5,7 +5,7 @@ var DEBUG = false;
 var palette = [
     ,       // transparent
     "#111", // 1 black
-    "#900", // 2 red
+    "#910", // 2 red
     "#c96", // 3 beige
     "#382", // 4 light green
     "#352", // 5 dark green
