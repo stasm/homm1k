@@ -211,10 +211,10 @@ tick = (v, cell = 900) => {
             // caught, critter is undefined and neighbors(critter) returns an
             // array of NaNs which is good enough for making this no-op.
             neighbors(critter).some(n =>
-                // Filter the neighboring tiles by mixing the timestamp (a
-                // pseudo-random component) in to land somewhere far on the x
-                // axis and testing if sin() is above zero.
-                Math.sin(n * Date.now()) > 0
+                // Filter the neighboring tiles by mixing in the seed (a
+                // pseudo-random component) to land somewhere far on the
+                // x axis and testing if sin() is above zero.
+                Math.sin(n * seed) > 0
                 && DEBUG_critter_deciding(n, {final: false})
                 // We use the > check rather than >= to force the critter to run
                 // away from the player. E.g. if the player is at NW, the
