@@ -248,8 +248,8 @@ tick = (v, cell = 900) => {
 };
 
 a.onclick = (e,
-        x = e.x - e.target.offsetLeft,
-        y = e.y - e.target.offsetTop) => {
+        x = e.x - a.offsetLeft,
+        y = e.y - a.offsetTop) => {
     if (x < 480) {
         // Handle viewport clicks. Transform x, y into an index into the world
         // array taking the scaled offset into account.
