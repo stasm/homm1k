@@ -25,12 +25,12 @@ function show_current_cell(cell) {
 
 let arrows = [
     "↑",
-    "←",
-    "↓",
-    "→",
     "↖",
+    "←",
     "↙",
+    "↓",
     "↘",
+    "→",
     "↗",
 ];
 

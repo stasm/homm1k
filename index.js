@@ -93,12 +93,12 @@ viewport = (cell, sprite) => {
 // on the map. Note: this makes the map wrap around horizontally.
 neighbors = cell => [
     cell - 30, // N
-    cell - 1, // W
-    cell + 30, // S
-    cell + 1, // E
     cell - 31, // NW
+    cell - 1, // W
     cell + 29, // SW
+    cell + 30, // S
     cell + 31, // SE
+    cell + 1, // E
     cell - 29, // NE
 ],
 
@@ -114,8 +114,8 @@ distance = function*(cell) {
     while (frontier.length) {
         let current = frontier.shift();
         for (let [i, n] of neighbors(current).entries()) {
-            if (world[n] > world[current] + 1) {
-                world[n] = world[current] + 1;
+            if (world[n] > world[current] + 1 + i % 2) {
+                world[n] = world[current] + 1 + i % 2;
                 frontier.push(n);
 
                 if (world[n] < 11) {
