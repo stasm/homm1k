@@ -114,8 +114,10 @@ distance = function*(cell) {
                 world[n] = world[current] + 1;
                 frontier.push(n);
 
-                yield show_current_neighbor(n, i);
-                yield show_current_cell(n);
+                if (world[n] < 11) {
+                    yield show_current_neighbor(n, i);
+                    yield show_current_cell(n);
+                }
             }
         }
     }
