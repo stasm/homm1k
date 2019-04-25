@@ -28,6 +28,10 @@ let arrows = [
     "←",
     "↓",
     "→",
+    "↖",
+    "↙",
+    "↘",
+    "↗",
 ];
 
 function show_current_neighbor(n, i) {

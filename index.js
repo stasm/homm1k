@@ -96,6 +96,10 @@ neighbors = cell => [
     cell - 1, // W
     cell + 30, // S
     cell + 1, // E
+    cell - 31, // NW
+    cell + 29, // SW
+    cell + 31, // SE
+    cell - 29, // NE
 ],
 
 // For a given tile, inspect its neighbors and increment their distance scores
