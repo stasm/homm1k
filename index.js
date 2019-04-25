@@ -108,21 +108,14 @@ neighbors = cell => [
 // score of the neighbor is lower than the previous one, assign it and
 // recursively call distance on the neighbor's neighbors.
 distance = function*(cell) {
-    yield show_current_cell(cell);
-
-    let frontier = [cell];
-    while (frontier.length) {
-        let current = frontier.shift();
-        for (let [i, n] of neighbors(current).entries()) {
-            if (world[n] > world[current] + 1 + i % 2) {
-                world[n] = world[current] + 1 + i % 2;
-                frontier.push(n);
-
-                if (world[n] < 11) {
-                    yield show_current_neighbor(n, i);
-                    yield show_current_cell(n);
-                }
-            }
+    if (world[cell] < 11)
+        yield show_current_cell(cell);
+    for (let [i, n] of neighbors(cell).entries()) {
+        if (world[n] > world[cell] + 1 + i % 2) {
+            world[n] = world[cell] + 1 + i % 2;
+            if (world[n] < 11)
+                yield show_current_neighbor(n, i);
+            yield * distance(n);
         }
     }
 },
