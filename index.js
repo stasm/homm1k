@@ -1,7 +1,3 @@
-// Enable debugging visualizations for path-finding and AI.
-// All lines with DEBUG are removed from the minified build.
-var DEBUG = false;
-
 var palette = [
     ,       // transparent
     "#111", // 1 black
@@ -45,6 +41,7 @@ world = [],
 
 // The seed for the terrain generation.
 seed = Date.now(),
+seed = 1556180567099,
 
 
 // DRAWING
@@ -96,13 +93,9 @@ viewport = (cell, sprite) => {
 // on the map. Note: this makes the map wrap around horizontally.
 neighbors = cell => [
     cell - 30, // N
-    cell - 31, // NW
     cell - 1, // W
-    cell + 29, // SW
     cell + 30, // S
-    cell + 31, // SE
     cell + 1, // E
-    cell - 29, // NE
 ],
 
 // For a given tile, inspect its neighbors and increment their distance scores
@@ -110,12 +103,23 @@ neighbors = cell => [
 // non-numeric value which also fails the > check. If the computed distance
 // score of the neighbor is lower than the previous one, assign it and
 // recursively call distance on the neighbor's neighbors.
-distance = cell => neighbors(cell).map((n, i) => {
-    if (world[n] > world[cell] + 1 + i % 2) {
-        world[n] = world[cell] + 1 + i % 2;
-        distance(n);
+distance = function*(cell) {
+    yield show_current_cell(cell);
+
+    let frontier = [cell];
+    while (frontier.length) {
+        let current = frontier.shift();
+        for (let [i, n] of neighbors(current).entries()) {
+            if (world[n] > world[current] + 1) {
+                world[n] = world[current] + 1;
+                frontier.push(n);
+
+                yield show_current_neighbor(n, i);
+                yield show_current_cell(n);
+            }
+        }
     }
-}),
+},
 
 // Trace the path connecting the player and the target. The tracing starts at
 // the target and follows the descending gradient of distance scores stored in
@@ -146,10 +150,9 @@ plan = cell => {
     }
 },
 
-
 // GAME LOOP
 
-tick = (v, cell = 900) => {
+tick = function*(v, cell = 900) {
     // Draw the red background.
     // Also set the line width for the minimap visible area
     c.fillStyle = palette[c.lineWidth = 2];
@@ -189,11 +192,12 @@ tick = (v, cell = 900) => {
     c.strokeStyle = palette[7];
     c.strokeRect(offset_x, offset_y, 60, 60);
 
+    yield;
+    show_world_values();
+
     // Populate the world array with distances of each tile to the player.
     world[player] = 0;
-    distance(player);
-    DEBUG_flee_region();
-    DEBUG_distance_scores();
+    yield * distance(player);
 
     // Handle movement if the player if they haven't reached the target yet. The
     // world[target] check is similar to player != target, but it also avoids
@@ -216,12 +220,10 @@ tick = (v, cell = 900) => {
                 // land somewhere far on the x axis and testing if sin() is
                 // above zero. This has a similar effect as a random sort.
                 Math.sin(n * next * seed) > 0
-                && DEBUG_critter_deciding(n, {final: false})
                 // We use the > check rather than >= to force the critter to run
                 // away from the player. E.g. if the player is at NW, the
                 // critter will choose between S, SE, and E.
                 && world[n] > world[critter]
-                && DEBUG_critter_deciding(n, {final: true})
                 // If the tile is a good candidate for the critter's movement,
                 // update the critter's position and return true to end the
                 // some() iteration.
@@ -247,30 +249,43 @@ tick = (v, cell = 900) => {
     }
 };
 
-a.onclick = (e,
-        x = e.x - a.offsetLeft,
-        y = e.y - a.offsetTop) => {
-    if (x < 480) {
+a.onclick = (e, x = e.x - a.offsetLeft, y = e.y - a.offsetTop) => {
+    if (!paused && x < 480) {
         // Handle viewport clicks. Transform x, y into an index into the world
         // array taking the scaled offset into account.
-        plan(
-            0|(x / 8 + offset_x - 500) / 4
-            + 30 * (0|(y / 8 + offset_y - 20) / 4));
-    } else if (y < 140) {
-        // Handle minimap clicks. Adjust the offset of the visible minimap
-        // fragment.
-        offset_x = x - 30;
-        offset_y = y - 30;
-    }
+        let cell = 0|(x / 8 + offset_x - 500) / 4
+            + 30 * (0|(y / 8 + offset_y - 20) / 4);
 
-    // If the critter hasn't been caught yet, update the game state in response
-    // to the click and render it.
-    if (critter) {
-        tick();
+        trace(cell);
+        // Draw the X mark at the target.
+        viewport(cell, 00010013103330030); // The X
     }
 };
 
 b.bgColor = palette[3];
 
 // Start the game loop.
-tick();
+let paused = false;
+let iter = tick();
+step();
+
+function step() {
+    let rv = iter.next();
+    paused = !rv.done;
+}
+
+async function play() {
+    let start = performance.now();
+    let count = 0;
+    while (paused) {
+        step();
+        count++;
+        await delay(10);
+    }
+    let seconds = Math.round(performance.now() - start) / 1000;
+    console.log({count, seconds});
+}
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}

@@ -5,69 +5,53 @@ function cell_to_screen(cell) {
     };
 }
 
-function DEBUG_distance_scores() {
-    if (!DEBUG)
-        return true;
-
-    for (let [cell, score] of world.entries()) {
-        if (isNaN(score) || score === 0 || score > 15)
-            continue;
-
-        let {x, y} = cell_to_screen(cell);
-        if (x > 480 - 32)
-            continue;
-
-        let prev_fill_style = c.fillStyle;
-        if (cell != critter) {
-            c.fillStyle = `hsla(
-                    ${score * 255 / 15}, 100%, 50%, ${0.2 - score / 75}`;
-            c.fillRect(x, y, 24, 24);
-        }
-        c.fillStyle = `rgba(255, 255, 255, ${0.5 - score / 30}`;
-        c.font = "16px monospace";
-        c.fillText(score, x + 2, y + 16);
-        c.fillStyle = prev_fill_style;
-    }
-
-    return true;
-}
-
-function DEBUG_flee_region() {
-    if (!DEBUG)
-        return true;
-
-    for (let [cell, score] of world.entries()) {
-        if (isNaN(score) || score === 0 || score > 15)
-            continue;
-
-        let {x, y} = cell_to_screen(cell);
-        if (x > 480 - 32)
-            continue;
-
-        let prev_fill_style = c.fillStyle;
-        if (score > world[critter]) {
-            c.fillStyle = `hsla(
-                    ${score * 255 / 15}, 100%, 50%, ${0.33 - score / 45}`;
-            c.fillRect(x, y, 24, 24);
-        }
-        c.fillStyle = prev_fill_style;
-    }
-
-    return true;
-}
-
-function DEBUG_critter_deciding(cell, {final}) {
-    if (!DEBUG)
-        return true;
-
+function show_current_cell(cell) {
     let {x, y} = cell_to_screen(cell);
-    if (x < 480) {
-        let prev_fill_style = c.fillStyle;
-        c.fillStyle = final ?
-                `hsla(128, 100%, 50%, 0.5)`:
-                `hsla(200, 100%, 50%, 0.5)`;
-        c.fillRect(x, y, 24, 24);
-        c.fillStyle = prev_fill_style;
+    if (x > 480 - 32)
+        return;
+
+    let prev_fill_style = c.fillStyle;
+    let score = world[cell];
+    c.fillStyle = palette[5];
+    c.fillRect(x, y, 32, 32);
+    c.fillStyle = `hsla(
+        ${score * 255 / 15}, 100%, 50%, ${0.2 - score / 75}`;
+    c.fillRect(x, y, 24, 24);
+    c.fillStyle = `rgba(255, 255, 255, ${0.5 - score / 30}`;
+    c.font = "16px monospace";
+    c.fillText(score, x + 2, y + 16);
+    c.fillStyle = prev_fill_style;
+}
+
+let arrows = [
+    "↑",
+    "←",
+    "↓",
+    "→",
+];
+
+function show_current_neighbor(n, i) {
+    let {x, y} = cell_to_screen(n);
+    if (x > 480 - 32)
+        return;
+
+    let prev_fill_style = c.fillStyle;
+    c.fillStyle = "rgba(255, 255, 255, .9)";
+    c.font = "16px sans-serif";
+    c.fillText(arrows[i], x + 8, y + 16);
+    c.fillStyle = prev_fill_style;
+}
+
+function show_world_values() {
+    for (let [cell, score] of world.entries()) {
+        let {x, y} = cell_to_screen(cell);
+        if (x > 480 - 32)
+            continue;
+
+        if (score === palette) {
+            c.fillStyle = "hsla(0, 0%, 0%, 1)";
+            c.fillRect(x, y, 32, 32);
+        }
     }
 
     return true;
